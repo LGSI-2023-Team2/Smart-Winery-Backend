@@ -4,18 +4,34 @@ module.exports = function(app){
     const express = require("express");
     const router = express.Router();
     const Wine = require("../models/wine");
+    const Aroma = require("../models/aroma");
     const Cellar = require("../models/cellar");
     const mongoose = require("mongoose");
+
     router.get("/", function(req, res){
         console.log("this is winecellar");
     });
     
     router.get("/winename", function(req, res){
-        var wineid = new mongoose.Types.ObjectId(req.query.id);
+        //console.log(req);
+        const wineid = new mongoose.Types.ObjectId(req.query.id);
         Wine.findOne({_id: wineid})
-            .populate('aroma')
-            .populate('pairing')
             .then(function(wine){
+                wine.toJSON;
+                
+                for(let [key, value] of wine.aroma) {
+                    for(let value1 of value){
+                        console.log(wine.aroma.get(key));
+                        wine.aroma.set(key, [new mongoose.Types.ObjectId(req.query.id)]);
+                        console.log(wine.aroma.get(key));
+                        /* Aroma.findOne({_id: value1})
+                            .then(function(aroma){
+                                console.log(wine.aroma.get(key));
+                                //wine.aroma.get(key)[0] = aroma.name;
+                            }) */
+                    }
+                    
+                }
                 res.json(wine);
                 console.log("찾았어요!");
             })
