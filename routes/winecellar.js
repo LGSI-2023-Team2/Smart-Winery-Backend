@@ -5,20 +5,18 @@ module.exports = function(app){
     const router = express.Router();
     const Wine = require("../models/wine");
     const Cellar = require("../models/cellar");
-    
+    const mongoose = require("mongoose");
     router.get("/", function(req, res){
         console.log("this is winecellar");
     });
     
     router.get("/winename", function(req, res){
-        Wine.findOne({_id: req.query.id})
+        Wine.findOne({_id: mongoose.Schema.Types.ObjectId(req.query.id)})
             .populate('aroma')
             .populate('pairing')
             .then(function(wine){
                 res.json(wine);
                 console.log("찾았어요!");
-                console.log(wine.eng_name);
-                console.log(wine.imgsrc);
             })
             .catch(function(err){
                 res.json(err);
