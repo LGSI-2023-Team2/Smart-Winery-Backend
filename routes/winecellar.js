@@ -14,14 +14,14 @@ module.exports = function(app){
         Wine.findOne({_id: req.query.id})
             .populate('aroma')
             .populate('pairing')
-            .exec(function(err, wine){
-                if(err){
-                    return res.return(err);
-                }
+            .then(function(wine){
                 res.json(wine);
                 console.log("찾았어요!");
                 console.log(wine.eng_name);
                 console.log(wine.imgsrc);
+            })
+            .catch(function(err){
+                res.json(err);
             });
     });
     

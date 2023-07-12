@@ -21,7 +21,7 @@ app.use("/android", require('./routes/android')(app));
 app.use("/refrigerator", require('./routes/refrigerator')(app)); */
 
 app.get("/", function(req, res){
-    console.log("test");
+    res.json("testing");
 });
 
 
