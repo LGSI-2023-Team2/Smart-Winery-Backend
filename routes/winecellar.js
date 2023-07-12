@@ -11,7 +11,7 @@ module.exports = function(app){
     });
     
     router.get("/winename", function(req, res){
-        Wine.findOne({_id: mongoose.Schema.Types.ObjectId(req.query.id)})
+        Wine.findOne({_id: mongoose.Types.ObjectId(req.query.id)})
             .populate('aroma')
             .populate('pairing')
             .then(function(wine){
