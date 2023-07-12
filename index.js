@@ -15,14 +15,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 
 //routes
-/* app.use("/winecellar", require('./routes/winecellar')(app));
+app.use("/winecellar", require('./routes/winecellar')(app));
+/*
 app.use("/android", require('./routes/android')(app));
 app.use("/refrigerator", require('./routes/refrigerator')(app)); */
 
 app.get("/", function(req, res){
     console.log("test");
 });
-
 
 
 //DB configuration
