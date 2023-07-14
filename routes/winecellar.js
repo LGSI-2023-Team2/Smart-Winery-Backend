@@ -5,49 +5,57 @@ module.exports = function(app){
     const router = express.Router();
     const Wine = require("../models/wine");
     const Aroma = require("../models/aroma");
+    const AromaCategory = require("../models/aroma-category");
     const Cellar = require("../models/cellar");
     const mongoose = require("mongoose");
 
+    // default get function => return and log 'this is winecellar'
     router.get("/", function(req, res){
-        console.log("this is winecellar");
+        res.json("[WINECELLAR]:: this is winecellar")
+        console.log("[WINECELLAR]:: this is winecellar");
     });
-    
-    router.get("/winename", function(req, res){
-        //console.log(req);
-        const wineid = new mongoose.Types.ObjectId(req.query.id);
-        Wine.findOne({_id: wineid})
-            .then(function(wine){
-                wine.toJSON;
-                
-                for(let [key, value] of wine.aroma) {
-                    for(let value1 of value){
-                        console.log(wine.aroma.get(key));
-                        wine.aroma.set(key, [new mongoose.Types.ObjectId(req.query.id)]);
-                        console.log(wine.aroma.get(key));
-                        /* Aroma.findOne({_id: value1})
-                            .then(function(aroma){
-                                console.log(wine.aroma.get(key));
-                                //wine.aroma.get(key)[0] = aroma.name;
-                            }) */
-                    }
-                    
-                }
-                res.json(wine);
-                console.log("찾았어요!");
-            })
-            .catch(function(err){
-                res.json(err);
-            });
+
+    router.post("/", function(req, res){
+        console.log("winecellar initiate starting");
     });
-    
-    router.post("/wine/:cellarid/:winebarcode", function(req, res){
-        let cellarid;
+
+    // received wine cellar id as get method, return wine cellar data
+    router.get("/:cellarid", function(req, res){
+        console.log("[WINECELLAR]:: winecellar id request received!");
         Cellar.findOne({_id: req.params.cellarid})
+            .populate(floor1)
+            .populate(floor2)
+            .populate(floor3)
             .exec(function(err, cellar){
                 if(err){
                     return res.return(err);
                 }
-                cellarid = cellar._id;
+                console.log("[WINECELLAR]:: winecellar found");
+                res.json(cellar);
+                console.log("[WINECELLAR]:: winecellar data returned!");
+            });
+        
+    });
+    
+    /*
+    // receive wine cellar id as param, row and col as body to drink wine 
+    // first, find which cellar is clinet looking for,
+    // second, delete wine from received data(row, col)
+    router.delete("/:cellarid", function(req, res){
+        // step 1. find cellar
+        Cellar.findOne({_id: req.params.cellarid})
+            .populate(
+                path: ,
+                model: 
+            )
+            .exec(function(err, cellar){
+                if(err){
+                    return res.return(err);
+                }
+
+                // step 2. erase wine
+                
+                
             });
     
         var wine = new Wine();
@@ -59,7 +67,6 @@ module.exports = function(app){
                 wine = wine_info;
             });
     
-        // algorithm, save and return status
     });
     
     router.get("/status", function(req, res){
@@ -78,7 +85,7 @@ module.exports = function(app){
     router.post("/:cellarid/:floor", function(req, res){
         var floor = req.params.floor;
     });
-
+    */
     return router;
 }
 

@@ -3,12 +3,14 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const cors = require("cors");
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 
 require('dotenv').config();
 
 //express setting
+app.use(cors());
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));

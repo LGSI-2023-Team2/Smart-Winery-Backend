@@ -2,6 +2,18 @@
 
 var mongoose = require("mongoose");
 
+const aromaCategorySchema = new mongoose.Schema({
+  category: {type: String},
+  imgsrc: {type: String},
+  aroma_names: [{type:String}]
+});
+
+const pairingCategorySchema = new mongoose.Schema({
+  category: {type: String},
+  imgsrc: {type: String},
+  pairing_names: [{type:String}]
+});
+
 const wineSchema = new mongoose.Schema({
     eng_name: String,
     imgsrc: String,
@@ -10,19 +22,11 @@ const wineSchema = new mongoose.Schema({
     acid: Number,
     body: Number,
     tannin: Number,
-    aroma: {
-      type: Map,
-      of: [{type: mongoose.Schema.Types.ObjectId, ref:'Aroma'}],
-      default: { 0: [0] }
-    },
+    aroma: [{type: aromaCategorySchema}],
     alcohol: String,
     temp: Number,
     type: String,
-    pairing: {
-      type: Map,
-      of: [{type: mongoose.Schema.Types.ObjectId, ref:'Pairing'}],
-      default: { 0: [0] }
-    },
+    pairing: [{type: pairingCategorySchema}],
     barcode: Number
   });
 

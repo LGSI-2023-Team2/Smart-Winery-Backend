@@ -7,13 +7,16 @@ const floorSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  temperature: {
+  temperature_now: {
+    type: Number,
+    required: true
+  },
+  temperature_target: {
     type: Number,
     required: true
   },
   wine_ids: {
-    type: [{type: mongoose.Schema.Types.ObjectId, ref:'Wine'}],
-    required: true
+    type: [{type: mongoose.Schema.Types.ObjectId, ref : 'Cell'}]
   },
   is_smart_mode: {
     type: Boolean,
@@ -23,20 +26,18 @@ const floorSchema = new mongoose.Schema({
 });
 
 const cellarSchema = new mongoose.Schema({
-  floor1: {
+  floor1:{
     type: floorSchema,
     required: true
   },
-  floor2: {
+  floor2:{
     type: floorSchema,
     required: true
   },
-  floor3: {
+  floor3:{
     type: floorSchema,
     required: true
   }
 });
 
-const Cellar = mongoose.model('Cellar', cellarSchema, 'cellars');
-
-module.exports = Cellar;
+module.exports = mongoose.model('Cellar', cellarSchema, 'cellars');
