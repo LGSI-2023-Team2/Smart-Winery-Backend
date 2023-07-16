@@ -15,7 +15,7 @@ const floorSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  wine_ids: {
+  cell_ids: {
     type: [{type: mongoose.Schema.Types.ObjectId, ref : 'Cell'}]
   },
   is_smart_mode: {

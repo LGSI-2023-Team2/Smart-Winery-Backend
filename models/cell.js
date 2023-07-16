@@ -8,4 +8,4 @@ const cellSchema = new mongoose.Schema({
   wine_id: {type: mongoose.Schema.Types.ObjectId, ref:'Wine'}
 });
 
-module.exports = mongoose.model('Cell', cellSchema);
+module.exports = mongoose.model('Cell', cellSchema, 'cells');

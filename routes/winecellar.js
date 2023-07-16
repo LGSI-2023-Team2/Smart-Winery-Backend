@@ -4,88 +4,275 @@ module.exports = function(app){
     const express = require("express");
     const router = express.Router();
     const Wine = require("../models/wine");
-    const Aroma = require("../models/aroma");
-    const AromaCategory = require("../models/aroma-category");
     const Cellar = require("../models/cellar");
-    const mongoose = require("mongoose");
+    const Cell = require("../models/cell");
 
-    // default get function => return and log 'this is winecellar'
-    router.get("/", function(req, res){
-        res.json("[WINECELLAR]:: this is winecellar")
-        console.log("[WINECELLAR]:: this is winecellar");
-    });
+    // !!! ROUTE TO / !!!
+    router.route('/')
+        // !!! GET !!!
+        // !!! function to check the connectivity !!!
+        .get(function(req, res){
+            res.json("[WINECELLAR]:: this is winecellar")
+            console.log("[WINECELLAR]:: this is winecellar");
+        })
+        // !!! DELETE !!!
+        // !!! function to delete wine from winecellar !!!
+        .delete(function(req, res){
+            console.log("[WINECELLAR]:: delete request received");
+            // step 1. find cellar
+            Cellar.findOne({_id: req.body.cellarid})
+                .populate({
+                    path: 'floor1.cell_ids',
+                    model: Cell,
+                    populate: {
+                        path: 'wine_id',
+                        model: Wine
+                    }
+                })
+                .populate({
+                    path: 'floor2.cell_ids',
+                    model: Cell,
+                    populate: {
+                        path: 'wine_id',
+                        model: Wine
+                    }
+                })
+                .populate({
+                    path: 'floor3.cell_ids',
+                    model: Cell,
+                    populate: {
+                        path: 'wine_id',
+                        model: Wine
+                    }
+                })
+                .then(function(cellar){
+                    // step 2. find wine
+                    var floor = req.body.row;
+                    var cellID;
+                    console.log(cellar);
+                    if(floor == 1){
+                        cellar.floor1.cell_ids.forEach(function(curCell){
+                            console.log(curCell);
+                            if(curCell.col == req.body.col){
+                                cellID = curCell._id;
+                                console.log("found!");
+                            }
+                        });
+                    }
+                    else if(floor == 2){
+                        cellar.floor2.cell_ids.forEach(function(curCell){
+                            if(curCell.col == req.body.col){
+                                cellID = curCell._id;
+                                console.log("found!");
+                            }
+                        });
+                    }
+                    else if(floor == 3){
+                        cellar.floor3.cell_ids.forEach(function(curCell){
+                            if(curCell.col == req.body.col){
+                                cellID = curCell._id;
+                                console.log("found!");
+                            }
+                        });
+                    }
+                    // step 3. delete wine
+                    Cell.deleteOne({_id: cellID})
+                        .then(function(msg){
+                            console.log("[WINECELLAR]:: delete Success cellId: ", cellID);
+                            res.json(cellar);
+                        })
+                        .catch(function(err){
+                            res.json(err);
+                            console.log("[WINECELLAR]:: delete failed");
+                        })
+                    
+                })
+                .catch(function(err){
+                    res.json(err);
+                    console.log("[WINECELLAR]:: drinking wine failed")
+                })
+        })
 
-    router.post("/", function(req, res){
-        console.log("winecellar initiate starting");
-    });
-
-    // received wine cellar id as get method, return wine cellar data
-    router.get("/:cellarid", function(req, res){
-        console.log("[WINECELLAR]:: winecellar id request received!");
-        Cellar.findOne({_id: req.params.cellarid})
-            .populate(floor1)
-            .populate(floor2)
-            .populate(floor3)
-            .exec(function(err, cellar){
-                if(err){
-                    return res.return(err);
-                }
-                console.log("[WINECELLAR]:: winecellar found");
-                res.json(cellar);
-                console.log("[WINECELLAR]:: winecellar data returned!");
-            });
+    // !!! ROUTE TO status !!!
+    router.route('/status')
+        // !!! GET !!!
+        // !!! function to get cellar info !!!
+        .get(function(req, res){
+            console.log("[WINECELLAR]:: winecellar status request received");
+            Cellar.findOne({_id: req.query.id})
+                // since cell_id is related to cell
+                .populate({
+                    path: 'floor1.cell_ids',
+                    model: Cell,
+                    populate: {
+                        path: 'wine_id',
+                        model: Wine
+                    }
+                })
+                .populate({
+                    path: 'floor2.cell_ids',
+                    model: Cell,
+                    populate: {
+                        path: 'wine_id',
+                        model: Wine
+                    }
+                })
+                .populate({
+                    path: 'floor3.cell_ids',
+                    model: Cell,
+                    populate: {
+                        path: 'wine_id',
+                        model: Wine
+                    }
+                })
+                .then(function(cellar){
+                    console.log("[WINECELLAR]:: winecellar found");
+                    console.log(cellar);
+                    res.json(cellar);
+                })
+                .catch(function(err){
+                    console.log("[WINECELLAR]:: winecellar data ERROR!");
+                    res.json(err);
+                });
+        })
         
-    });
-    
-    /*
-    // receive wine cellar id as param, row and col as body to drink wine 
-    // first, find which cellar is clinet looking for,
-    // second, delete wine from received data(row, col)
-    router.delete("/:cellarid", function(req, res){
-        // step 1. find cellar
-        Cellar.findOne({_id: req.params.cellarid})
-            .populate(
-                path: ,
-                model: 
-            )
-            .exec(function(err, cellar){
-                if(err){
-                    return res.return(err);
-                }
+    router.route('/setting')
+        // !!! GET !!!
+        // !!! function to get cellar setting !!!
+        .get(function(req, res){
+            console.log("[WINECELLAR]:: winecellar setting request received");
+            // step 1. find cellar
+            Cellar.findOne({_id: req.query.id})
+                .populate({
+                    path: 'floor1.cell_ids',
+                    model: Cell
+                })
+                .populate({
+                    path: 'floor2.cell_ids',
+                    model: Cell
+                })
+                .populate({
+                    path: 'floor3.cell_ids',
+                    model: Cell
+                })
+                .then(function(cellar){
+                    // step 2. return cellar setting info
+                    console.log("[WINECELLAR]:: winecellar found");
+                    console.log(cellar);
+                    res.json(cellar);
+                })
+                .catch(function(err){
+                    console.log("[WINECELLAR]:: winecellar data ERROR!");
+                    res.json(err);
+                });
+        })
+        // !!! POST !!!
+        // !!! function to set cellar setting !!!
+        .post(function(req, res){
+            console.log("[WINECELLAR]:: winecellar setting request received");
+            var setting = req.body;
+            // step 1. find cellar
+            Cellar.findOne({_id: req.body.cellarid})
+                .populate({
+                    path: 'floor1.cell_ids',
+                    model: Cell
+                })
+                .populate({
+                    path: 'floor2.cell_ids',
+                    model: Cell
+                })
+                .populate({
+                    path: 'floor3.cell_ids',
+                    model: Cell
+                })
+                .then(function(cellar){
+                    // step 2. update cellar setting
+                    console.log("[WINECELLAR]:: winecellar found");
+                    console.log(cellar);
+                    cellar.floor1.cell_ids.forEach(function(curCell){
+                        if(curCell.col == setting.col){
+                            curCell.temp = setting.temp;
+                            curCell.humi = setting.humi;
+                            curCell.save();
+                        }
+                    });
+                    cellar.floor2.cell_ids.forEach(function(curCell){
+                        if(curCell.col == setting.col){
+                            curCell.temp = setting.temp;
+                            curCell.humi = setting.humi;
+                            curCell.save();
+                        }
+                    });
+                    cellar.floor3.cell_ids.forEach(function(curCell){
+                        if(curCell.col == setting.col){
+                            curCell.temp = setting.temp;
+                            curCell.humi = setting.humi;
+                            curCell.save();
+                        }
+                    });
+                    // step 3. return cellar setting info
+                    res.json(cellar);
+                })
+                .catch(function(err){
+                    console.log("[WINECELLAR]:: winecellar data ERROR!");
+                    res.json(err);
+                });
+        })
+        // !!! PUT !!!
+        // !!! function to set cellar setting !!!
+        .put(function(req, res){
+            console.log("[WINECELLAR]:: winecellar setting request received");
+            var setting = req.body;
+            // step 1. find cellar
+            Cellar.findOne({_id: req.body.cellarid})
+                .populate({
+                    path: 'floor1.cell_ids',
+                    model: Cell
+                })
+                .populate({
+                    path: 'floor2.cell_ids',
+                    model: Cell
+                })
+                .populate({
+                    path: 'floor3.cell_ids',
+                    model: Cell
+                })
+                .then(function(cellar){
+                    // step 2. update cellar setting
+                    console.log("[WINECELLAR]:: winecellar found");
+                    console.log(cellar);
+                    cellar.floor1.cell_ids.forEach(function(curCell){
+                        if(curCell.col == setting.col){
+                            curCell.temp = setting.temp;
+                            curCell.humi = setting.humi;
+                            curCell.save();
+                        }
+                    });
+                    cellar.floor2.cell_ids.forEach(function(curCell){
+                        if(curCell.col == setting.col){
+                            curCell.temp = setting.temp;
+                            curCell.humi = setting.humi;
+                            curCell.save();
+                        }
+                    });
+                    cellar.floor3.cell_ids.forEach(function(curCell){
+                        if(curCell.col == setting.col){
+                            curCell.temp = setting.temp;
+                            curCell.humi = setting.humi;
+                            curCell.save();
+                        }
+                    });
+                    // step 3. return cellar setting info
+                    res.json(cellar);
+                })
+                .catch(function(err){
+                    console.log("[WINECELLAR]:: winecellar data ERROR!");
+                    res.json(err);
+                });
+        })
 
-                // step 2. erase wine
-                
-                
-            });
     
-        var wine = new Wine();
-        Wine.findOne({barcode: req.query.winebarcode})
-            .exec(function(err, wine_info){
-                if(err){
-                    return res.return(err);
-                }
-                wine = wine_info;
-            });
     
-    });
-    
-    router.get("/status", function(req, res){
-        Cellar.findOne({_id: req.query.id})
-            .populate('floor1.wine_ids')
-            .populate('floor2.wine_ids')
-            .populate('floor3.wine_ids')
-            .exec(function(err, cellar){
-                if(err){
-                    return res.return(err);
-                }
-                res.json(cellar);
-            });
-    });
-    
-    router.post("/:cellarid/:floor", function(req, res){
-        var floor = req.params.floor;
-    });
-    */
     return router;
 }
 
