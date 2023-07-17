@@ -12,8 +12,20 @@ module.exports = function(app){
         // !!! GET !!!
         // !!! function to check the connectivity !!!
         .get(function(req, res){
-            res.json("[WINECELLAR]:: this is winecellar")
+            //res.json("[WINECELLAR]:: this is winecellar")
             console.log("[WINECELLAR]:: this is winecellar");
+            Cellar.create({
+                floor1: {},
+                floor2: {},
+                floor3: {}
+            })
+                .then(function(cellar){
+                    res.json(cellar);
+                })
+                .catch(function(err){
+                    console.log(err);
+                }
+            );
         })
         // !!! DELETE !!!
         // !!! function to delete wine from winecellar !!!
@@ -318,8 +330,57 @@ module.exports = function(app){
         // !!! POST !!!
         // !!! function to put the wine !!!
         .post(function(req, res){
-            console.log("[WINECELLAR]:: winecellar cell request received");
-            // step 1. find cellar
+            console.log("[WINECELLAR]:: winecellar cell add request received");
+            // step 1. create cell with provided wine id
+            Cell.create({
+                row: req.body.row,
+                col: req.body.col,
+                wine_id: req.body.wineid
+            })
+                .then(function(cell){
+                    // step 2. find cellar with provided cellar id
+                    Cellar.findOne({_id: req.body.cellarid})
+                        .then(function(cellar){
+                            // step 3. push cell id to cellar
+                            if(req.body.row == 1){
+                                cellar.floor1.cell_ids.push(cell._id);
+                            }
+                            else if(req.body.row == 2){
+                                cellar.floor2.cell_ids.push(cell._id);
+                            }
+                            else if(req.body.row == 3){
+                                cellar.floor3.cell_ids.push(cell._id);
+                            }
+                            cellar.save();
+                            res.json(cellar);
+                        })
+                        .catch(function(err){
+                            console.log("[WINECELLAR]:: winecellar data ERROR!");
+                            res.json(err);
+                        });
+                })
+                .catch(function(err){
+                    console.log("[WINECELLAR]:: winecellar data ERROR!");
+                    res.json(err);
+                });
+
+        })
+            
+
+    // !!! ROUTE TO move !!!
+    router.route('/move')
+        // !!! GET !!!
+        // !!! function to ask client before move the wine !!!
+        .get(function(req, res){
+            console.log("[WINECELLAR]:: winecellar move request received");
+            res.json({message: "move request received"});
+        })
+        // !!! POST !!!
+        // !!! function to move the wine !!!
+        .post(function(req, res){
+            console.log("[WINECELLAR]:: winecellar move request received");
+            // step 1. remove wine from cellar
+            // step 1-1. find cellar
             Cellar.findOne({_id: req.body.cellarid})
                 .populate({
                     path: 'floor1.cell_ids',
@@ -346,44 +407,68 @@ module.exports = function(app){
                     }
                 })
                 .then(function(cellar){
-                    // step 2. find wine
-                    Wine.findOne({_id: req.body.wineid})
-                        .then(function(wine){
-                            // step 3. find cell and save wine_id
-                            if(req.body.floor == 1){
-                                cellar.floor1.cell_ids.save({
-                                    row: req.body.row,
-                                    col: req.body.col,
-                                    wine_id: wine._id
-                                });
-                            }else if(req.body.floor == 2){
-                                cellar.floor2.cell_ids.save({
-                                    row: req.body.row,
-                                    col: req.body.col,
-                                    wine_id: wine._id
-                                });
-                            }else if(req.body.floor == 3){
-                                cellar.floor3.cell_ids.save({
-                                    row: req.body.row,
-                                    col: req.body.col,
-                                    wine_id: wine._id
-                                });
+                    // step 1-2. find cell
+                    var cellId;
+                    if(req.body.wine1_row == 1){
+                        cellar.floor1.cell_ids.forEach(function(cell){
+                            if(cell.row == req.body.wine1_row && cell.col == req.body.wine1_col){
+                                cellId = cell._id;
+                                cellar.floor1.cell_ids.pull(cellId);
                             }
-                            // step 4. save and return cellar info
+                        });
+                    }
+                    else if(req.body.wine1_row == 2){
+                        cellar.floor2.cell_ids.forEach(function(cell){
+                            if(cell.row == req.body.wine1_row && cell.col == req.body.wine1_col){
+                                cellId = cell._id;
+                                cellar.floor2.cell_ids.pull(cellId);
+                            }
+                        });
+                    }
+                    else if(req.body.wine1_row == 3){
+                        cellar.floor3.cell_ids.forEach(function(cell){
+                            if(cell.row == req.body.wine1_row && cell.col == req.body.wine1_col){
+                                cellId = cell._id;
+                                cellar.floor3.cell_ids.pull(cellId);
+                            }
+                        });
+                    }
+                    
+                    // step 1-3. remove wine from cell
+                    Cell.deleteOne({_id: cellId});
+                    // step 2. add wine to cellar
+                    // step 2-1. create cell with provided wine id
+                    Cell.create({
+                        row: req.body.wine2_row,
+                        col: req.body.wine2_col,
+                        wine_id: req.body.wine_id
+                    })
+                        .then(function(cell){
+                            // step 2-2. save cell id to cellar
+                            if(req.body.wine2_row == 1){
+                                cellar.floor1.cell_ids.push(cell._id);
+                            }
+                            else if(req.body.wine2_row == 2){
+                                cellar.floor2.cell_ids.push(cell._id);
+                            }
+                            else if(req.body.wine2_row == 3){
+                                cellar.floor3.cell_ids.push(cell._id);
+                            }
                             cellar.save();
                             res.json(cellar);
                         })
                         .catch(function(err){
-                            console.log("[WINECELLAR]:: wine data ERROR!");
+                            console.log("[WINECELLAR]:: winecellar data ERROR!");
                             res.json(err);
-                        });
+                        }
+                    );
                 })
                 .catch(function(err){
                     console.log("[WINECELLAR]:: winecellar data ERROR!");
                     res.json(err);
                 });
-        })    
-    
+        })
+            
     return router;
 }
 

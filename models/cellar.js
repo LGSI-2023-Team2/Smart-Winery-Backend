@@ -5,22 +5,21 @@ const mongoose = require('mongoose');
 const floorSchema = new mongoose.Schema({
   type: {
     type: Number,
-    required: true
+    default: 0
   },
   temperature_now: {
     type: Number,
-    required: true
+    default: 0
   },
   temperature_target: {
     type: Number,
-    required: true
+    default: 0
   },
   cell_ids: {
     type: [{type: mongoose.Schema.Types.ObjectId, ref : 'Cell'}]
   },
   is_smart_mode: {
     type: Boolean,
-    required: true,
     default: true
   }
 });
