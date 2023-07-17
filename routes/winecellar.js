@@ -10,9 +10,8 @@ module.exports = function(app){
     // !!! ROUTE TO / !!!
     router.route('/')
         // !!! GET !!!
-        // !!! function to check the connectivity !!!
+        // !!! function to initialize the winecellar !!!
         .get(function(req, res){
-            //res.json("[WINECELLAR]:: this is winecellar")
             console.log("[WINECELLAR]:: this is winecellar");
             Cellar.create({
                 floor1: {},
@@ -27,9 +26,9 @@ module.exports = function(app){
                 }
             );
         })
-        // !!! DELETE !!!
-        // !!! function to delete wine from winecellar !!!
-        .delete(function(req, res){
+        // !!! POST !!!
+        // !!! function to POST wine from winecellar !!!
+        .post(function(req, res){
             console.log("[WINECELLAR]:: delete request received");
             // step 1. find cellar
             Cellar.findOne({_id: req.body.cellarid})
@@ -177,15 +176,12 @@ module.exports = function(app){
                     console.log("[WINECELLAR]:: winecellar found");
                     console.log(cellar);
                     cellar.floor1.type = setting.floor1_type;
-                    cellar.floor1.temperature_now = setting.floor1_temperature_now;
                     cellar.floor1.temperature_target = setting.floor1_temperature_target;
                     cellar.floor1.is_smart_mode = setting.floor1_is_smart_mode;
                     cellar.floor2.type = setting.floor2_type;
-                    cellar.floor2.temperature_now = setting.floor2_temperature_now;
                     cellar.floor2.temperature_target = setting.floor2_temperature_target;
                     cellar.floor2.is_smart_mode = setting.floor2_is_smart_mode;
                     cellar.floor3.type = setting.floor3_type;
-                    cellar.floor3.temperature_now = setting.floor3_temperature_now;
                     cellar.floor3.temperature_target = setting.floor3_temperature_target;
                     cellar.floor3.is_smart_mode = setting.floor3_is_smart_mode;
                     // step 3. return cellar setting info
