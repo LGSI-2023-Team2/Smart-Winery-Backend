@@ -298,6 +298,7 @@ module.exports = function(app){
         // !!! function to move the wine !!!
         .post(function(req, res){
             console.log("[WINECELLAR]:: winecellar move request received");
+            console.log(req.body);
             // step 1. remove wine from cellar
             // step 1-1. find cellar
             Cellar.findOne({_id: req.body.cellarid})
@@ -336,7 +337,7 @@ module.exports = function(app){
                             // step 1-3. find wine
                             var wine = await Wine.findOne({_id: req.body.wine_id});
                             // step 1-4. save cell id to cellar !!! only when wine type match !!!
-                            if(req.body.wine2_row == 1 && ((cellar.floor1.type == 1 && cell.wine_id.type == "Red") || (cellar.floor1.type == 2 && cell.wine_id.type == "White") || (cellar.floor1.type == 3 && cell.wine_id.type == "Sparkling"))){
+                            if(req.body.wine2_row == 1 && ((cellar.floor1.type == 1 && wine.type == "Red") || (cellar.floor1.type == 2 && wine.type == "White") || (cellar.floor1.type == 3 && wine.type == "Sparkling"))){
                                 cellar.floor1.cell_ids.push(cell._id);
                             }
                             else if(req.body.wine2_row == 2 && ((cellar.floor2.type == 1 && wine.type == "Red") || (cellar.floor2.type == 2 && wine.type == "White") || (cellar.floor2.type == 3 && wine.type == "Sparkling"))){
