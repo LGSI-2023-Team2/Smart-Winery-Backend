@@ -19,14 +19,10 @@ app.use(methodOverride('_method'));
 //routes
 app.use("/winecellar", require('./routes/winecellar')(app));
 app.use("/wine", require('./routes/wine')(app));
-/*
-app.use("/android", require('./routes/android')(app));
-app.use("/refrigerator", require('./routes/refrigerator')(app)); */
 
 app.get("/", function(req, res){
     res.json("testing");
 });
-
 
 //DB configuration
 var db = mongoose.connection;

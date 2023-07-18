@@ -6,7 +6,10 @@ module.exports = function(app){
     const Wine = require("../models/wine");
     const mongoose = require("mongoose");
 
+    // Route to '/'
     router.route('/')
+        // !!! GET !!!
+        // !!! function to return wine data !!!
         .get(function(req, res){
             console.log("[WINE]:: wine info get request received!");
             Wine.findOne({_id: req.query.wineid})
