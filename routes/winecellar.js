@@ -135,8 +135,7 @@ module.exports = function(app){
                     }
                 })
                 .then(function(cellar){
-                    console.log("[WINECELLAR]:: winecellar found");
-                    console.log(cellar);
+                    console.log("[WINECELLAR]:: winecellar found and returned");
                     res.json(cellar);
                 })
                 .catch(function(err){
@@ -269,6 +268,7 @@ module.exports = function(app){
                                 else{
                                     console.log("[WINECELLAR]:: winecellar cell add ERROR!");
                                     res.json({error: "wine type not match"});
+                                    return;
                                 }
                             }
                             cellar.save();
@@ -277,11 +277,13 @@ module.exports = function(app){
                         .catch(function(err){
                             console.log("[WINECELLAR]:: winecellar data ERROR!");
                             res.json(err);
+                            return;
                         });
                 })
                 .catch(function(err){
                     console.log("[WINECELLAR]:: winecellar data ERROR!");
                     res.json(err);
+                    return;
                 });
 
         })
@@ -349,6 +351,7 @@ module.exports = function(app){
                             else{
                                 console.log("[WINECELLAR]:: winecellar cell add ERROR!");
                                 res.json({error: "wine type not match"});
+                                return;
                             }
 
                             // step 2. delete cell from cellar
@@ -387,6 +390,7 @@ module.exports = function(app){
                         .catch(function(err){
                             console.log("[WINECELLAR]:: winecellar data ERROR!");
                             res.json(err);
+                            return;
                         }
                     );
                 })
