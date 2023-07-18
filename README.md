@@ -1,6 +1,5 @@
----
-description: APIs documentation
----
-
-# LGSI@2023 API Documentation
-
+# LGSI2023 Smart Winery Backend
+## build with
+Nodejs
+Mongodb
+AWS EC2
