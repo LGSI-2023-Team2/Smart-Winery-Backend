@@ -21,19 +21,13 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
             "is_smart_mode": true
         },
         "move_wine": [
-            {
-                "cur_row": 1,
-                "cur_col": 1,
-                "next_row": 2,
-                "next_col": 3
-            }
         ]
     };
     var wine_cellar = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
     var is_smart_arr = [1, 1, 0];
     var wine_categories = [3, 2, 3];
     
-    jsonData.floor1.temp_target = cellar_json.floor1.temp_target;
+    jsonData.floor1.temp_target = cellar_json.floor1.temperature_target;
     jsonData.floor2.temp_target = cellar_json.floor2.temp_target;
     jsonData.floor3.temp_target = cellar_json.floor3.temp_target;
 
