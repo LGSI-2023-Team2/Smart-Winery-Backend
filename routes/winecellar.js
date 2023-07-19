@@ -357,19 +357,46 @@ module.exports = function(app){
                             // step 1-4. save cell id to cellar !!! only when wine type match !!!
                             if(req.body.wine2_row == 1){
                                 cellar.floor1.cell_ids.push(cell._id);
+                                if(cellar.floor1.cell_ids.length != 0){
+                                    var temp = 0;
+                                    for(var i = 0; i < cellar.floor1.cell_ids.length - 1; i++){
+                                        temp += cellar.floor1.cell_ids[i].wine_id.temp;
+                                    }
+                                    temp += wine.temp;
+                                    temp /= cellar.floor1.cell_ids.length;
+                                    cellar.floor1.temperature_target = temp;
+                                }
                             }
                             else if(req.body.wine2_row == 2){
                                 cellar.floor2.cell_ids.push(cell._id);
+                                if(cellar.floor2.cell_ids.length != 0){
+                                    var temp;
+                                    for(var i = 0; i < cellar.floor2.cell_ids.length - 1; i++){
+                                        temp += cellar.floor2.cell_ids[i].wine_id.temp;
+                                    }
+                                    temp += wine.temp;
+                                    temp = temp / cellar.floor2.cell_ids.length;
+                                    cellar.floor2.temperature_target = temp;
+                                }
                             }
                             else if(req.body.wine2_row == 3){
                                 cellar.floor3.cell_ids.push(cell._id);
+                                if(cellar.floor3.cell_ids.length != 0){
+                                    var temp = 0;
+                                    for(var i = 0; i < cellar.floor3.cell_ids.length - 1; i++){
+                                        temp += cellar.floor3.cell_ids[i].wine_id.temp;
+                                    }
+                                    temp += wine.temp;
+                                    temp = temp / cellar.floor3.cell_ids.length;
+                                    cellar.floor3.temperature_target = temp;
+                                }
                             }
                             else{
                                 console.log("[WINECELLAR]:: winecellar cell add ERROR!");
                                 res.json({error: "wine type not match"});
                                 return;
                             }
-
+                            
                             // step 2. delete cell from cellar
                             // step 2-1. find cell
                             var cellId;
@@ -380,6 +407,15 @@ module.exports = function(app){
                                         cellar.floor1.cell_ids.pull(cellId);
                                     }
                                 });
+                                if(cellar.floor1.cell_ids.length != 0){
+                                    var temp = 0;
+                                    for(var i = 0; i < cellar.floor1.cell_ids.length - 1; i++){
+                                        temp += cellar.floor1.cell_ids[i].wine_id.temp;
+                                    }
+                                    temp += wine.temp;
+                                    temp /= cellar.floor1.cell_ids.length;
+                                    cellar.floor1.temperature_target = temp;
+                                }
                             }
                             else if(req.body.wine1_row == 2){
                                 cellar.floor2.cell_ids.forEach(function(cell){
@@ -388,6 +424,15 @@ module.exports = function(app){
                                         cellar.floor2.cell_ids.pull(cellId);
                                     }
                                 });
+                                if(cellar.floor2.cell_ids.length != 0){
+                                    var temp = 0;
+                                    for(var i = 0; i < cellar.floor2.cell_ids.length - 1; i++){
+                                        temp += cellar.floor2.cell_ids[i].wine_id.temp;
+                                    }
+                                    temp += wine.temp;
+                                    temp = temp / cellar.floor2.cell_ids.length;
+                                    cellar.floor2.temperature_target = temp;
+                                }
                             }
                             else if(req.body.wine1_row == 3){
                                 cellar.floor3.cell_ids.forEach(function(cell){
@@ -396,6 +441,15 @@ module.exports = function(app){
                                         cellar.floor3.cell_ids.pull(cellId);
                                     }
                                 });
+                                if(cellar.floor3.cell_ids.length != 0){
+                                    var temp = 0;
+                                    for(var i = 0; i < cellar.floor3.cell_ids.length - 1; i++){
+                                        temp += cellar.floor3.cell_ids[i].wine_id.temp;
+                                    }
+                                    temp += wine.temp;
+                                    temp = temp / cellar.floor3.cell_ids.length;
+                                    cellar.floor3.temperature_target = temp;
+                                }
                             }
                             
                             // step 2-2. remove wine from cell
