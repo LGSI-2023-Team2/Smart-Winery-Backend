@@ -30,12 +30,12 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
         ]
     };
     var wine_cellar = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
-    var is_smart_arr = [1, 1, 0];
+    var is_smart_arr = [1, 1, 1];
     var wine_categories = [3, 2, 3];
     
-    jsonData.floor1.temp_target = cellar_json.floor1.temp_target;
-    jsonData.floor2.temp_target = cellar_json.floor2.temp_target;
-    jsonData.floor3.temp_target = cellar_json.floor3.temp_target;
+    jsonData.floor1.temp_target = cellar_json.floor1.temperature_target;
+    jsonData.floor2.temp_target = cellar_json.floor2.temperature_target;
+    jsonData.floor3.temp_target = cellar_json.floor3.temperature_target;
 
     jsonData.floor1.type = cellar_json.floor1.type;
     wine_categories[0] = cellar_json.floor1.type;
@@ -103,12 +103,14 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
         return jsonData;
     }
 
+    //비어있는 칸이 있는지 찾기
     for(var i = 0; i < 15; i++){
         if(wine_cellar[i] == -1){
             empty_check = 1;
         }
     }
 
+    //모든 칸이 차있는 경우
     if(empty_check == 0){
         jsonData.type = 0;
         jsonData.msg("Wine cellar is already full!");
@@ -133,9 +135,9 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
     empty_check = 0;
     cate_check = 0;
     for(var i = 0; i < 3; i++){
-        if(wine_categories[i] == input_wine_category){
+        if((wine_categories[i] == input_wine_category) && (is_smart_arr[i] == 1)){
             for(var j = 0; j < 5; j++){
-                if(wine_cellar[i*5 + j] == -1){
+                if(wine_cellar[i * 5 + j] == -1){
                     empty_check = 1;
                 }
             }
@@ -148,7 +150,6 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
     }
 
     if(cate_check == 1){ // 같은 카테고리가 있을때
-        console.log("bo");
         if(same_cate_arr.length != 0){
             //같은 카테고리가 있고 그 칸이 비었을때 칸들 중 가장 좋은 칸 찾아주기
             for(var i = 0; i < same_cate_arr.length; i++){
@@ -179,6 +180,31 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
             }
         }
         else{
+            for(var i = 0; i < 3; i++){
+                if(cur_cellar_count[i] == 0){ // 어떤 비어있는 칸이 있는 경우
+                    jsonData.input_row = i + 1;
+                    jsonData.input_col = 1;
+                    jsonData.msg.push("i 층에 1번째에 해당 와인 넣기, 그 층의 온도는 input_wine_temp로5, 카테고리도 바꾸고 스마트모드도 킴");
+                    jsonData.type = 1;
+                    if(i == 0){
+                        jsonData.floor1.temp_target = input_wine_temp;
+                        jsonData.floor1.type = input_wine_category;
+                        jsonData.floor1.is_smart_mode = 1;
+                    }
+                    else if(i == 1){
+                        jsonData.floor2.temp_target = input_wine_temp;
+                        jsonData.floor2.type = input_wine_category;
+                        jsonData.floor2.is_smart_mode = 1;
+                    }
+                    else if(i == 2){
+                        jsonData.floor3.temp_target = input_wine_temp;
+                        jsonData.floor3.type = input_wine_category;
+                        jsonData.floor3.is_smart_mode = 1;
+                    }
+                    return jsonData;
+                }
+            }
+
             //같은 카테고리가 있기는 한데 그 칸들이 모두 차있는 경우
             for(var i = 0; i < 3; i++){
                 if(is_smart_arr[i] == 0){ // 스마트 모드가 꺼진 칸에서
@@ -188,39 +214,13 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
                                 next_temp = int((cur_cellar_temp[i] * cur_cellar_count[i] + input_wine_temp) / (cur_cellar_count[i] + 1));
                                 jsonData.input_row = i + 1;
                                 jsonData.input_col = j + 1;
-                                jsonData.msg.push("2번 옮기기");
+                                jsonData.msg.push("user mode인 i+1번째 j+1에 와인을 넣음 온도는 그전과 같게 유지");
                                 jsonData.type = 1;
-                                if(i == 0){
-                                    jsonData.floor1.temp_target = next_temp;
-                                }
-                                else if(i == 1){
-                                    jsonData.floor2.temp_target = next_temp;
-                                }
-                                else if(i == 2){
-                                    jsonData.floor3.temp_target = next_temp;
-                                }
+
                                 return jsonData;
                             }
                         }
                     }
-                }
-            }
-            for(var i = 0; i < 3; i++){
-                if(cur_cellar_count[i] == 0){ // 어떤 비어있는 칸이 있는 경우
-                    jsonData.input_row = i + 1;
-                    jsonData.input_col = 1;
-                    jsonData.msg.push("i 층에 1번째에 해당 와인 넣기, 그 층의 온도는 input_wine_temp로5");
-                    jsonData.type = 1;
-                    if(i == 0){
-                        jsonData.floor1.temp_target = input_wine_temp;
-                    }
-                    else if(i == 1){
-                        jsonData.floor2.temp_target = input_wine_temp;
-                    }
-                    else if(i == 2){
-                        jsonData.floor3.temp_target = input_wine_temp;
-                    }
-                    return jsonData;
                 }
             }
 
