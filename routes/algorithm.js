@@ -1,4 +1,3 @@
-
 function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
     var jsonData = {
         "type": 1,
@@ -308,10 +307,140 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
                     if(wine_categories[not_this_cate[0]] == wine_categories[not_this_cate[1]]){
                         if((cur_cellar_count[not_this_cate[0]] + cur_cellar_count[not_this_cate[1]]) <= 5){
                             if(cur_cellar_count[not_this_cate[0]] >= cur_cellar_count[not_this_cate[1]]){
-                                return "not_this_cate[1]번 열에 있는 것들을 다 not_this_cate[0]열로 넣어주고, not_this_cate[1] 층에 1번째에 와인 넣고, 그 층의 온도는 input_wine_temp로 바꿔주고, category도 input으로 바꿔주기9";
+                                for(var k = 0; k < cur_cellar_count[not_this_cate[1]]; k++){
+                                    for(var q = 0; q < 5; q++){
+                                        if(wine_cellar[not_this_cate[1] * 5 + q] != -1){
+                                            for(var p = 0; p < 5; p++){
+                                                if(wine_cellar[not_this_cate[0] * 5 + p] == -1){
+                                                    wine_cellar[not_this_cate[0] * 5 + p] = wine_cellar[not_this_cate[1] * 5 + q];
+                                                    wine_cellar[not_this_cate[1] * 5 + q] == -1
+                                                    jsonData.move_wine.push({
+                                                        "cur_row" : not_this_cate[1] + 1,
+                                                        "cur_col" : q + 1,
+                                                        "next_row" : not_this_cate[0] + 1,
+                                                        "next_col" : p + 1
+                                                    })
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                jsonData.input_row = not_this_cate[1] + 1;
+                                jsonData.input_col = 1;
+                                jsonData.msg.push("not_this_cate[1] 층에 1번째에 해당 와인 넣기, 그 층의 온도는 input_temp로 바꾸기7");
+                                jsonData.type = 2;
+                                if(not_this_cate[1] == 0){
+                                    jsonData.floor1.temp_target = input_wine_temp;
+                                    jsonData.floor1.type = input_wine_category;
+                                    jsonData.floor1.is_smart_mode = 1;
+                                }
+                                else if(not_this_cate[1] == 1){
+                                    jsonData.floor2.temp_target = input_wine_temp;
+                                    jsonData.floor2.type = input_wine_category;
+                                    jsonData.floor2.is_smart_mode = 1;
+                                }
+                                else if(not_this_cate[1] == 2){
+                                    jsonData.floor3.temp_target = input_wine_temp;
+                                    jsonData.floor3.type = input_wine_category;
+                                    jsonData.floor3.is_smart_mode = 1;
+                                }
+
+
+                                cur_cellar_temp = [0, 0, 0];
+                                cur_cellar_count = [0, 0, 0];
+                                // 각 층 평균 온도와 와인 갯수 구하기
+                                for(var i = 0; i < 3; i++){
+                                    for(var j = 0; j < 5; j++){
+                                        if(wine_cellar[i * 5 + j] != -1){
+                                            cur_cellar_count[i]++;
+                                            cur_cellar_temp[i] += wine_cellar[i * 5 + j];
+                                        }
+                                    }
+                                    if(cur_cellar_count[i] != 0){
+                                        cur_cellar_temp[i] = int(cur_cellar_temp[i] / cur_cellar_count[i]);
+                                    }
+                                }
+
+                                if(jsonData.floor1.is_smart_mode == 1){
+                                    jsonData.floor1.temp_target = cur_cellar_temp[0];
+                                }
+                                if(jsonData.floor2.is_smart_mode == 1){
+                                    jsonData.floor2.temp_target = cur_cellar_temp[1];
+                                }
+                                if(jsonData.floor3.is_smart_mode == 1){
+                                    jsonData.floor3.temp_target = cur_cellar_temp[2];
+                                }
+
+                                return jsonData;
                             }
                             else{
-                                return "not_this_cate[0]번 열에 있는 것들을 다 not_this_cate[1]열로 넣어주고, not_this_cate[0] 층에 1번째에 와인 넣고, 그 층의 온도는 input_wine_temp로 바꿔주고, category도 input으로 바꿔주기10";
+                                for(var k = 0; k < cur_cellar_count[not_this_cate[0]]; k++){
+                                    for(var q = 0; q < 5; q++){
+                                        if(wine_cellar[not_this_cate[0] * 5 + q] != -1){
+                                            for(var p = 0; p < 5; p++){
+                                                if(wine_cellar[not_this_cate[1] * 5 + p] == -1){
+                                                    wine_cellar[not_this_cate[1] * 5 + p] = wine_cellar[not_this_cate[0] * 5 + q];
+                                                    wine_cellar[not_this_cate[0] * 5 + q] == -1
+                                                    jsonData.move_wine.push({
+                                                        "cur_row" : not_this_cate[0] + 1,
+                                                        "cur_col" : q + 1,
+                                                        "next_row" : not_this_cate[1] + 1,
+                                                        "next_col" : p + 1
+                                                    })
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                jsonData.input_row = not_this_cate[0] + 1;
+                                jsonData.input_col = 1;
+                                jsonData.msg.push("not_this_cate[0] 층에 1번째에 해당 와인 넣기, 그 층의 온도는 input_temp로 바꾸기7");
+                                jsonData.type = 2;
+                                if(not_this_cate[0] == 0){
+                                    jsonData.floor1.temp_target = input_wine_temp;
+                                    jsonData.floor1.type = input_wine_category;
+                                    jsonData.floor1.is_smart_mode = 1;
+                                }
+                                else if(not_this_cate[0] == 1){
+                                    jsonData.floor2.temp_target = input_wine_temp;
+                                    jsonData.floor2.type = input_wine_category;
+                                    jsonData.floor2.is_smart_mode = 1;
+                                }
+                                else if(not_this_cate[0] == 2){
+                                    jsonData.floor3.temp_target = input_wine_temp;
+                                    jsonData.floor3.type = input_wine_category;
+                                    jsonData.floor3.is_smart_mode = 1;
+                                }
+
+
+                                cur_cellar_temp = [0, 0, 0];
+                                cur_cellar_count = [0, 0, 0];
+                                // 각 층 평균 온도와 와인 갯수 구하기
+                                for(var i = 0; i < 3; i++){
+                                    for(var j = 0; j < 5; j++){
+                                        if(wine_cellar[i * 5 + j] != -1){
+                                            cur_cellar_count[i]++;
+                                            cur_cellar_temp[i] += wine_cellar[i * 5 + j];
+                                        }
+                                    }
+                                    if(cur_cellar_count[i] != 0){
+                                        cur_cellar_temp[i] = int(cur_cellar_temp[i] / cur_cellar_count[i]);
+                                    }
+                                }
+
+                                if(jsonData.floor1.is_smart_mode == 1){
+                                    jsonData.floor1.temp_target = cur_cellar_temp[0];
+                                }
+                                if(jsonData.floor2.is_smart_mode == 1){
+                                    jsonData.floor2.temp_target = cur_cellar_temp[1];
+                                }
+                                if(jsonData.floor3.is_smart_mode == 1){
+                                    jsonData.floor3.temp_target = cur_cellar_temp[2];
+                                }
+
+                                return jsonData;
                             }
                         }
                         else{
@@ -333,7 +462,25 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
                         return jsonData;
                     }
                     else{
-                        return "not_this_cate[0] 줄에 넣으셈, 온도 바꿔야됨14";
+                        for(var j = 0; j < 5; j++){ 
+                            if(wine_cellar[not_this_cate[0] * 5 + j] == -1){
+                                next_temp = int((cur_cellar_temp[not_this_cate[0]] * cur_cellar_count[not_this_cate[0]] + input_wine_temp) / (cur_cellar_count[not_this_cate[0]] + 1));
+                                jsonData.input_row = not_this_cate[0] + 1;
+                                jsonData.input_col = j + 1;
+                                jsonData.msg.push("not_this_cate[0] 층에 j번째에 해당 와인 넣기, 그 층의 온도는 next_temp로 바꾸기7");
+                                jsonData.type = 1;
+                                if(not_this_cate[0] == 0){
+                                    jsonData.floor1.temp_target = next_temp;
+                                }
+                                else if(not_this_cate[0] == 1){
+                                    jsonData.floor2.temp_target = next_temp;
+                                }
+                                else if(not_this_cate[0] == 2){
+                                    jsonData.floor3.temp_target = next_temp;
+                                }
+                                return jsonData;
+                            }
+                        }
                     }
                 }
                 else if((is_smart_arr[not_this_cate[0]] == 1) && (is_smart_arr[not_this_cate[1]] == 0)){
@@ -343,7 +490,26 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
                         return jsonData;
                     }
                     else{
-                        return "not_this_cate[1] 줄에 넣으셈, 온도 바꿔야됨16";
+                        for(var j = 0; j < 5; j++){ 
+                            if(wine_cellar[not_this_cate[1] * 5 + j] == -1){
+                                next_temp = int((cur_cellar_temp[not_this_cate[1]] * cur_cellar_count[not_this_cate[1]] + input_wine_temp) / (cur_cellar_count[not_this_cate[1]] + 1));
+                                jsonData.input_row = not_this_cate[1] + 1;
+                                jsonData.input_col = j + 1;
+                                jsonData.msg.push("not_this_cate[1] 층에 j번째에 해당 와인 넣기, 그 층의 온도는 next_temp로 바꾸기7");
+                                jsonData.type = 1;
+                                if(not_this_cate[1] == 0){
+                                    jsonData.floor1.temp_target = next_temp;
+                                }
+                                else if(not_this_cate[1] == 1){
+                                    jsonData.floor2.temp_target = next_temp;
+                                }
+                                else if(not_this_cate[1] == 2){
+                                    jsonData.floor3.temp_target = next_temp;
+                                }
+    
+                                return jsonData;
+                            }
+                        }
                     }
                 }
                 else{
@@ -356,7 +522,22 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
                         else{
                             for(var k = 0; k < 5; k++){
                                 if(wine_cellar[not_this_cate[1] * 5 + k] == -1){
-                                    return (not_this_cate[1]+1) +  "층에" + (k+1) +"번째에 해당 와인 넣기, 그 층의 온도는" +  next_temp+ "로 바꾸기17"
+                                    next_temp = int((cur_cellar_temp[not_this_cate[1]] * cur_cellar_count[not_this_cate[1]] + input_wine_temp) / (cur_cellar_count[not_this_cate[1]] + 1));
+                                    jsonData.input_row = not_this_cate[1] + 1;
+                                    jsonData.input_col = k + 1;
+                                    jsonData.msg.push("not_this_cate[1] 층에 k번째에 해당 와인 넣기, 그 층의 온도는 next_temp로 바꾸기7");
+                                    jsonData.type = 1;
+                                    if(not_this_cate[1] == 0){
+                                        jsonData.floor1.temp_target = next_temp;
+                                    }
+                                    else if(not_this_cate[1] == 1){
+                                        jsonData.floor2.temp_target = next_temp;
+                                    }
+                                    else if(not_this_cate[1] == 2){
+                                        jsonData.floor3.temp_target = next_temp;
+                                    }
+        
+                                    return jsonData;
                                 }
                             }
                         }
@@ -371,21 +552,49 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
                             next_temp = int((cur_cellar_temp[not_this_cate[0]] * cur_cellar_count[not_this_cate[0]] + input_wine_temp) / (cur_cellar_count[not_this_cate[0]] + 1));
                             for(var k = 0; k < 5; k++){
                                 if(wine_cellar[not_this_cate[0] * 5 + k] == -1){
-                                    empty_space = not_this_cate[0] * 5 + k;
+                                    empty_space = k;
                                     break;
                                 }
                             }
-                            return (not_this_cate[0]+1) +  "층에" + (empty_space+1) +"번째에 해당 와인 넣기, 그 층의 온도는" +  next_temp+ "로 바꾸기17"
+                            jsonData.input_row = not_this_cate[0] + 1;
+                            jsonData.input_col = empty_space + 1;
+                            jsonData.msg.push("not_this_cate[0] 층에 empty_space번째에 해당 와인 넣기, 그 층의 온도는 next_temp로 바꾸기17");
+                            jsonData.type = 1;
+                            if(not_this_cate[0] == 0){
+                                jsonData.floor1.temp_target = next_temp;
+                            }
+                            else if(not_this_cate[0] == 1){
+                                jsonData.floor2.temp_target = next_temp;
+                            }
+                            else if(not_this_cate[0] == 2){
+                                jsonData.floor3.temp_target = next_temp;
+                            }
+
+                            return jsonData;
                         }
                         else{
                             next_temp = int((cur_cellar_temp[not_this_cate[1]] * cur_cellar_count[not_this_cate[1]] + input_wine_temp) / (cur_cellar_count[not_this_cate[1]] + 1));
                             for(var k = 0; k < 5; k++){
                                 if(wine_cellar[not_this_cate[1] * 5 + k] == -1){
-                                    empty_space = not_this_cate[1] * 5 + k;
+                                    empty_space = k;
                                     break;
                                 }
                             }
-                            return (not_this_cate[1]+1) +  "층에" + (empty_space+1) +"번째에 해당 와인 넣기, 그 층의 온도는" +  next_temp+ "로 바꾸기17"
+                            jsonData.input_row = not_this_cate[1] + 1;
+                            jsonData.input_col = empty_space + 1;
+                            jsonData.msg.push("not_this_cate[1] 층에 empty_space번째에 해당 와인 넣기, 그 층의 온도는 next_temp로 바꾸기17");
+                            jsonData.type = 1;
+                            if(not_this_cate[1] == 0){
+                                jsonData.floor1.temp_target = next_temp;
+                            }
+                            else if(not_this_cate[1] == 1){
+                                jsonData.floor2.temp_target = next_temp;
+                            }
+                            else if(not_this_cate[1] == 2){
+                                jsonData.floor3.temp_target = next_temp;
+                            }
+
+                            return jsonData;
                         }
                     }
                 }
@@ -397,7 +606,27 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
 
         for(var i = 0; i < 3; i++){
             if(cur_cellar_count[i] == 0){//빈 층이 있는 경우
-                return "i층 1번째 input wine으로 바꾸고, 온도도 input, 카테고리도 input, smart mode도 켜주기18"
+                jsonData.input_row = i + 1;
+                jsonData.input_col = 1;
+                jsonData.msg.push("i 층에 1번째에 해당 와인 넣기, 그 층의 온도는 input_wine_temp로 바꾸기, category도 inputwine으로 바꾸기8");
+                jsonData.type = 1;
+                if(i == 0){
+                    jsonData.floor1.temp_target = input_wine_temp;
+                    jsonData.floor1.type = input_wine_category;
+                    jsonData.floor1.is_smart_mode = true;
+                }
+                else if(i == 1){
+                    jsonData.floor2.temp_target = input_wine_temp;
+                    jsonData.floor2.type = input_wine_category;
+                    jsonData.floor2.is_smart_mode = true;
+                }
+                else if(i == 2){
+                    jsonData.floor3.temp_target = input_wine_temp;
+                    jsonData.floor3.type = input_wine_category;
+                    jsonData.floor3.is_smart_mode = true;
+                }
+
+                return jsonData;
             }
         }
 
@@ -470,6 +699,12 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
                                     wine_cellar[red_floor[i] * 5 + j] = wine_cellar[min_floor * 5 + k];
                                     wine_cellar[min_floor * 5 + k] == -1;
                                     red_count_arr[min_floor]--;
+                                    jsonData.move_wine.push({
+                                        "cur_row" : min_floor + 1,
+                                        "cur_col" : k + 1,
+                                        "next_row" : red_floor[i] + 1,
+                                        "next_col" : j + 1
+                                    })
                                     //min_floor층에 k번째 있던 것을 red_floor[i]층의 j번째로 옮기기
                                     //move_에 추가해주기, cell층 온도 바꿔주기
                                 }
@@ -478,8 +713,54 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
                     }
                 }
             }
+            
+            cur_cellar_temp = [0, 0, 0];
+            cur_cellar_count = [0, 0, 0];
+            // 각 층 평균 온도와 와인 갯수 구하기
+            for(var i = 0; i < 3; i++){
+                for(var j = 0; j < 5; j++){
+                    if(wine_cellar[i * 5 + j] != -1){
+                        cur_cellar_count[i]++;
+                        cur_cellar_temp[i] += wine_cellar[i * 5 + j];
+                    }
+                }
+                if(cur_cellar_count[i] != 0){
+                    cur_cellar_temp[i] = int(cur_cellar_temp[i] / cur_cellar_count[i]);
+                }
+            }
 
-            return "min_floor를 input의 와인 온도로 바꿔주고, min_floor의 1번에 와인 넣어주기"
+            if(jsonData.floor1.is_smart_mode == 1){
+                jsonData.floor1.temp_target = cur_cellar_temp[0];
+            }
+            if(jsonData.floor2.is_smart_mode == 1){
+                jsonData.floor2.temp_target = cur_cellar_temp[1];
+            }
+            if(jsonData.floor3.is_smart_mode == 1){
+                jsonData.floor3.temp_target = cur_cellar_temp[2];
+            }
+            
+            jsonData.input_row = min_floor + 1;
+            jsonData.input_col = 1;
+            jsonData.msg.push("min_floor 층에 1번째에 해당 와인 넣기, 그 층의 온도는 input_wine_temp로 바꾸기, category도 inputwine으로 바꾸기8");
+            jsonData.type = 2;
+
+            if(min_floor == 0){
+                jsonData.floor1.temp_target = input_wine_temp;
+                jsonData.floor1.type = input_wine_category;
+                jsonData.floor1.is_smart_mode = true;
+            }
+            else if(min_floor == 1){
+                jsonData.floor2.temp_target = input_wine_temp;
+                jsonData.floor2.type = input_wine_category;
+                jsonData.floor2.is_smart_mode = true;
+            }
+            else if(min_floor == 2){
+                jsonData.floor3.temp_target = input_wine_temp;
+                jsonData.floor3.type = input_wine_category;
+                jsonData.floor3.is_smart_mode = true;
+            }
+
+            return jsonData;
         }
         else if((white_count) <= (white_floor_count-1) * 5){
             //화이트 몰아주기
@@ -499,6 +780,12 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
                                     wine_cellar[white_floor[i] * 5 + j] = wine_cellar[min_floor * 5 + k];
                                     wine_cellar[min_floor * 5 + k] == -1;
                                     white_count_arr[min_floor]--;
+                                    jsonData.move_wine.push({
+                                        "cur_row" : min_floor + 1,
+                                        "cur_col" : k + 1,
+                                        "next_row" : red_floor[i] + 1,
+                                        "next_col" : j + 1
+                                    })
                                     //min_floor층에 k번째 있던 것을 white_floor[i]층의 j번째로 옮기기
                                     //move_에 추가해주기, cell층 온도 바꿔주기
                                 }
@@ -508,7 +795,54 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
                 }
             }
 
-            return "min_floor를 input의 와인 온도로 바꿔주고, min_floor의 1번에 와인 넣어주기"
+            cur_cellar_temp = [0, 0, 0];
+            cur_cellar_count = [0, 0, 0];
+            // 각 층 평균 온도와 와인 갯수 구하기
+            for(var i = 0; i < 3; i++){
+                for(var j = 0; j < 5; j++){
+                    if(wine_cellar[i * 5 + j] != -1){
+                        cur_cellar_count[i]++;
+                        cur_cellar_temp[i] += wine_cellar[i * 5 + j];
+                    }
+                }
+                if(cur_cellar_count[i] != 0){
+                    cur_cellar_temp[i] = int(cur_cellar_temp[i] / cur_cellar_count[i]);
+                }
+            }
+
+            if(jsonData.floor1.is_smart_mode == 1){
+                jsonData.floor1.temp_target = cur_cellar_temp[0];
+            }
+            if(jsonData.floor2.is_smart_mode == 1){
+                jsonData.floor2.temp_target = cur_cellar_temp[1];
+            }
+            if(jsonData.floor3.is_smart_mode == 1){
+                jsonData.floor3.temp_target = cur_cellar_temp[2];
+            }
+
+            
+            jsonData.input_row = min_floor + 1;
+            jsonData.input_col = 1;
+            jsonData.msg.push("min_floor 층에 1번째에 해당 와인 넣기, 그 층의 온도는 input_wine_temp로 바꾸기, category도 inputwine으로 바꾸기8");
+            jsonData.type = 2;
+
+            if(min_floor == 0){
+                jsonData.floor1.temp_target = input_wine_temp;
+                jsonData.floor1.type = input_wine_category;
+                jsonData.floor1.is_smart_mode = true;
+            }
+            else if(min_floor == 1){
+                jsonData.floor2.temp_target = input_wine_temp;
+                jsonData.floor2.type = input_wine_category;
+                jsonData.floor2.is_smart_mode = true;
+            }
+            else if(min_floor == 2){
+                jsonData.floor3.temp_target = input_wine_temp;
+                jsonData.floor3.type = input_wine_category;
+                jsonData.floor3.is_smart_mode = true;
+            }
+
+            return jsonData;
         }
         else if((spark_count) <= (spark_floor_count-1) * 5){
             //스파클링 몰아주기
@@ -528,6 +862,12 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
                                     wine_cellar[spark_floor[i] * 5 + j] = wine_cellar[min_floor * 5 + k];
                                     wine_cellar[min_floor * 5 + k] == -1;
                                     spark_count_arr[min_floor]--;
+                                    jsonData.move_wine.push({
+                                        "cur_row" : min_floor + 1,
+                                        "cur_col" : k + 1,
+                                        "next_row" : red_floor[i] + 1,
+                                        "next_col" : j + 1
+                                    })
                                     //min_floor층에 k번째 있던 것을 spark_floor[i]층의 j번째로 옮기기
                                     //move_에 추가해주기, cell층 온도 바꿔주기
                                 }
@@ -537,22 +877,79 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json){
                 }
             }
 
-            return "min_floor를 input의 와인 온도로 바꿔주고, min_floor의 1번에 와인 넣어주기"
+            cur_cellar_temp = [0, 0, 0];
+            cur_cellar_count = [0, 0, 0];
+            // 각 층 평균 온도와 와인 갯수 구하기
+            for(var i = 0; i < 3; i++){
+                for(var j = 0; j < 5; j++){
+                    if(wine_cellar[i * 5 + j] != -1){
+                        cur_cellar_count[i]++;
+                        cur_cellar_temp[i] += wine_cellar[i * 5 + j];
+                    }
+                }
+                if(cur_cellar_count[i] != 0){
+                    cur_cellar_temp[i] = int(cur_cellar_temp[i] / cur_cellar_count[i]);
+                }
+            }
+
+            if(jsonData.floor1.is_smart_mode == 1){
+                jsonData.floor1.temp_target = cur_cellar_temp[0];
+            }
+            if(jsonData.floor2.is_smart_mode == 1){
+                jsonData.floor2.temp_target = cur_cellar_temp[1];
+            }
+            if(jsonData.floor3.is_smart_mode == 1){
+                jsonData.floor3.temp_target = cur_cellar_temp[2];
+            }
+
+            
+            jsonData.input_row = min_floor + 1;
+            jsonData.input_col = 1;
+            jsonData.msg.push("min_floor 층에 1번째에 해당 와인 넣기, 그 층의 온도는 input_wine_temp로 바꾸기, category도 inputwine으로 바꾸기8");
+            jsonData.type = 2;
+
+            if(min_floor == 0){
+                jsonData.floor1.temp_target = input_wine_temp;
+                jsonData.floor1.type = input_wine_category;
+                jsonData.floor1.is_smart_mode = true;
+            }
+            else if(min_floor == 1){
+                jsonData.floor2.temp_target = input_wine_temp;
+                jsonData.floor2.type = input_wine_category;
+                jsonData.floor2.is_smart_mode = true;
+            }
+            else if(min_floor == 2){
+                jsonData.floor3.temp_target = input_wine_temp;
+                jsonData.floor3.type = input_wine_category;
+                jsonData.floor3.is_smart_mode = true;
+            }
+
+            return jsonData;
         }
         else{//몰아줄 놈이 없고, 빈 칸도 없음 -> 즉 user mode없으면 안됨
             for(var i = 0; i < 3; i++){
                 if(is_smart_arr[i] == 0){
                     for(var j = 0; j < 5; j++){
                         if(wine_cellar[i * 5 + j] == -1){
-                            return "i번째 층 j번째 열에 그 와인 넣어주고 평균 온도 맞춰주기22"
+                            jsonData.input_row = i + 1;
+                            jsonData.input_col = j + 1;
+                            jsonData.msg.push("i번째 층 j번째 열에 와인 넣어주기");
+
+                            return jsonData;
                         }
                     }
                 }
             }
 
-            return "넣을 칸 없어23"
+            jsonData.type = 0;
+            jsonData.msg("Wine can not add!20")
+            return jsonData;
         }
     }
+
+    jsonData.type = 0;
+    jsonData.msg("Wine can not add!15 end")
+    return jsonData;
 }
 
 console.log(wineAlgorithm())
