@@ -231,6 +231,7 @@ module.exports = function(app){
         .post(async function(req, res){
             console.log("[WINECELLAR]:: winecellar cell add request received");
             var wine = await Wine.findOne({_id: req.body.wineid});
+            console.log(wine);
             // step 1. create cell with provided wine id
             Cell.create({
                 row: req.body.row,
