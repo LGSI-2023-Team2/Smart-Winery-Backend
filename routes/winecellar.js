@@ -650,6 +650,7 @@ module.exports = function(app){
 
 function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cellar_json, input_imgsrc, input_wine_name, input_wine_type){
     var jsonData = {
+        "cellarid" : cellar_json._id,
         "flag": 1,
         "msg": [
         ],
