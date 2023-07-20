@@ -474,7 +474,7 @@ module.exports = function(app){
                             else if(req.body.wine2_row == 2){
                                 cellar.floor2.cell_ids.push(cell._id);
                                 if(cellar.floor2.cell_ids.length != 0 && cellar.floor2.is_smart_mode == true){
-                                    var temp;
+                                    var temp = 0;
                                     for(var i = 0; i < cellar.floor2.cell_ids.length - 1; i++){
                                         temp += cellar.floor2.cell_ids[i].wine_id.temp;
                                     }
