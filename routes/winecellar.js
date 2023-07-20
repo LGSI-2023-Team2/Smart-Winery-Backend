@@ -363,13 +363,14 @@ module.exports = function(app){
                             });
 
                             console.log("let's save new wine");
-                            console.log(cell);
+                            console.log(cellar);
                             if(req.body.input_row == 1){
                                 cellar.floor1.cell_ids.push(cell._id);
                             }
                             else if(req.body.input_row == 2){
+                                console.log("Tlqkf");
                                 cellar.floor2.cell_ids.push(cell._id);
-                                
+                                console.log("tlqkf2");
                             }
                             else if(req.body.input_row == 3){
                                 cellar.floor3.cell_ids.push(cell._id);
