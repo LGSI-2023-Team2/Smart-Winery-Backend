@@ -1301,6 +1301,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
             //레드 몰아주기
             for(var i = 0; i < red_floor.length; i++){
                 if(temp_min > red_count_arr[red_floor[i]]){
+                    temp_min = red_count_arr[red_floor[i]];
                     min_floor = red_floor[i];
                 }
             }
@@ -1384,6 +1385,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
             //화이트 몰아주기
             for(var i = 0; i < white_floor.length; i++){
                 if(temp_min > white_count_arr[white_floor[i]]){
+                    temp_min = white_count_arr[white_floor[i]];
                     min_floor = white_floor[i];
                 }
             }
@@ -1401,7 +1403,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                                     jsonData.move_wine.push({
                                         "cur_row" : min_floor + 1,
                                         "cur_col" : k + 1,
-                                        "next_row" : red_floor[i] + 1,
+                                        "next_row" : white_floor[i] + 1,
                                         "next_col" : j + 1,
                                         "img_src" : wine_img_src[min_floor * 5 + k],
                                         "wine_name" : wine_name_arr[min_floor * 5 + k]
@@ -1468,6 +1470,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
             //스파클링 몰아주기
             for(var i = 0; i < spark_floor.length; i++){
                 if(temp_min > spark_count_arr[spark_floor[i]]){
+                    temp_min = spark_count_arr[spark_floor[i]];
                     min_floor = spark_floor[i];
                 }
             }
@@ -1485,7 +1488,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                                     jsonData.move_wine.push({
                                         "cur_row" : min_floor + 1,
                                         "cur_col" : k + 1,
-                                        "next_row" : red_floor[i] + 1,
+                                        "next_row" : spark_floor[i] + 1,
                                         "next_col" : j + 1,
                                         "img_src" : wine_img_src[min_floor * 5 + k],
                                         "wine_name" : wine_name_arr[min_floor * 5 + k]
