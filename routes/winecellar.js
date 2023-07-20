@@ -373,6 +373,7 @@ module.exports = function(app){
                                 cellar.floor3.cell_ids.push(cell._id);
                             }
                             console.log("new wine saved");
+                            console.log(req.body);
                             // save setting
                             cellar.floor1.type = req.body.floor1.type;
                             cellar.floor1.temperature_target = req.body.floor1.temp_target;
