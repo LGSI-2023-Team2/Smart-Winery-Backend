@@ -1,5 +1,6 @@
 //LGSI2023/routes/winecellar.js
 
+const { json } = require("body-parser");
 const e = require("express");
 
 module.exports = function(app){
@@ -237,7 +238,7 @@ module.exports = function(app){
                     if(wine.type == "Red"){wine_type = 1;}else if(wine.type == "White"){wine_type = 2;}else if(wine.type == "Sparkling"){wine_type = 3;}else{wine_type = 4;}
                     
                     console.log("[WINECELLAR]:: winecellar data returned");
-                    var data = wineAlgorithm(wine.temp, wine_type, cellar, wine.imgsrc);
+                    var data = wineAlgorithm(wine.temp, wine_type, cellar, wine.imgsrc, wine.eng_name);
                     console.log(data);
                     res.json(data);
                 })
@@ -475,13 +476,14 @@ module.exports = function(app){
     return router;
 }
 
-function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json, input_imgsrc){
+function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json, input_imgsrc, input_wine_name){
     var jsonData = {
         "flag": 1,
         "msg": [
         ],
         "input_row": 1,
         "input_col": 1,
+        "input_name": "default",
         "imgsrc": "http://www.winecellar.com.tw/images/2017/2017-12-12/20171212100001.jpg",
         "floor1": {
             "type": 1,
@@ -507,6 +509,7 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json, input_
     var wine_img_src = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
     var wine_name_arr = ["default", "default", "default", "default", "default", "default", "default", "default", "default", "default", "default", "default", "default", "default", "default"];
 
+    jsonData.input_name = input_wine_name;
     jsonData.imgsrc = input_imgsrc;
     
     jsonData.floor1.temp_target = cellar_json.floor1.temperature_target;
