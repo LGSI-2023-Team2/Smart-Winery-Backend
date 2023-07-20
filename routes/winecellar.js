@@ -290,7 +290,7 @@ module.exports = function(app){
                         .then(async function(cellar){
                             console.log("cellar found");
                             // move wines
-                            req.body.move_wine.forEach(async function(wine){
+                            await req.body.move_wine.forEach(async function(wine){
                                 // first, remove wine from cellar
                                 var wine_id;
                                 // floor 1,
@@ -354,39 +354,41 @@ module.exports = function(app){
                                         // step 3. push cell id to cellar
                                         // 1->RED 2->White 3->Sparkling 4->Rose, Fortified
                                         
-                                        if(req.body.input_row == 1){
-                                            cellar.floor1.cell_ids.push(cell._id);
-                                        }
-                                        else if(req.body.input_row == 2){
-                                            cellar.floor2.cell_ids.push(cell._id);
-                                            
-                                        }
-                                        else if(req.body.input_row == 3){
-                                            cellar.floor3.cell_ids.push(cell._id);
-                                        }
-                                        console.log("new wine saved");
-                                        // save setting
-                                        cellar.floor1.type = req.body.floor1.type;
-                                        cellar.floor1.temperature_target = req.body.floor1.temp_target;
-                                        cellar.floor1.is_smart_mode = req.body.floor1.is_smart_mode;
-                                        cellar.floor2.type = req.body.floor2.type;
-                                        cellar.floor2.temperature_target = req.body.floor2.temp_target;
-                                        cellar.floor2.is_smart_mode = req.body.floor2.is_smart_mode;
-                                        cellar.floor3.type = req.body.floor3.type;
-                                        cellar.floor3.temperature_target = req.body.floor3.temp_target;
-                                        cellar.floor3.is_smart_mode = req.body.floor3.is_smart_mode;
-
-                                        console.log("setting saved");
-                                        console.log(cellar);
-
-                                        await cellar.save();
-                                        res.json(cellar);
                                     })
                                     .catch(function(err){
                                         console.log("[WINECELLAR]:: winecellar cell add ERROR!!!");
                                         res.json(err);
                                     });                
                             });
+
+                            console.log("let's save new wine");
+                            if(req.body.input_row == 1){
+                                cellar.floor1.cell_ids.push(cell._id);
+                            }
+                            else if(req.body.input_row == 2){
+                                cellar.floor2.cell_ids.push(cell._id);
+                                
+                            }
+                            else if(req.body.input_row == 3){
+                                cellar.floor3.cell_ids.push(cell._id);
+                            }
+                            console.log("new wine saved");
+                            // save setting
+                            cellar.floor1.type = req.body.floor1.type;
+                            cellar.floor1.temperature_target = req.body.floor1.temp_target;
+                            cellar.floor1.is_smart_mode = req.body.floor1.is_smart_mode;
+                            cellar.floor2.type = req.body.floor2.type;
+                            cellar.floor2.temperature_target = req.body.floor2.temp_target;
+                            cellar.floor2.is_smart_mode = req.body.floor2.is_smart_mode;
+                            cellar.floor3.type = req.body.floor3.type;
+                            cellar.floor3.temperature_target = req.body.floor3.temp_target;
+                            cellar.floor3.is_smart_mode = req.body.floor3.is_smart_mode;
+
+                            console.log("setting saved");
+                            console.log(cellar);
+
+                            await cellar.save();
+                            res.json(cellar);
                         })
                         .catch(function(err){
                             console.log("[WINECELLAR]:: winecellar data ERROR!");
