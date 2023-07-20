@@ -576,7 +576,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
         "flag": 1,
         "msg": [
         ],
-        "input_wine_id" : "default",
+        "input_wine_id" : input_wine_id,
         "input_row": 1,
         "input_col": 1,
         "input_name": "default",
