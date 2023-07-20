@@ -363,6 +363,7 @@ module.exports = function(app){
                             });
 
                             console.log("let's save new wine");
+                            console.log(cell);
                             if(req.body.input_row == 1){
                                 cellar.floor1.cell_ids.push(cell._id);
                             }
