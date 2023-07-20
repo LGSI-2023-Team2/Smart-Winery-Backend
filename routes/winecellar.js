@@ -527,19 +527,19 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json, input_
     cellar_json.floor1.cell_ids.forEach(element => {
         wine_cellar[(element.row - 1) * 5 + element.col - 1] = element.wine_id.temp
         wine_img_src[(element.row - 1) * 5 + element.col - 1] = element.wine_id.imgsrc
-        wine_name_arr[(element.row - 1) * 5 + element.col - 1] = element.wine_id.name
+        wine_name_arr[(element.row - 1) * 5 + element.col - 1] = element.wine_id.eng_name
     });
 
     cellar_json.floor2.cell_ids.forEach(element => {
         wine_cellar[(element.row - 1) * 5 + element.col - 1] = element.wine_id.temp
         wine_img_src[(element.row - 1) * 5 + element.col - 1] = element.wine_id.imgsrc
-        wine_name_arr[(element.row - 1) * 5 + element.col - 1] = element.wine_id.name
+        wine_name_arr[(element.row - 1) * 5 + element.col - 1] = element.wine_id.eng_name
     });
 
     cellar_json.floor3.cell_ids.forEach(element => {
         wine_cellar[(element.row - 1) * 5 + element.col - 1] = element.wine_id.temp
         wine_img_src[(element.row - 1) * 5 + element.col - 1] = element.wine_id.imgsrc
-        wine_name_arr[(element.row - 1) * 5 + element.col - 1] = element.wine_id.name
+        wine_name_arr[(element.row - 1) * 5 + element.col - 1] = element.wine_id.eng_name
     })
 
     if(cellar_json.floor1.is_smart_mode == true){
