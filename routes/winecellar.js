@@ -1,14 +1,15 @@
 //LGSI2023/routes/winecellar.js
 
-const { json } = require("body-parser");
-const e = require("express");
+// !!! IMPORTS !!!
+// !!! import winecellar model !!!
+const Wine = require("../models/wine");
+const Cellar = require("../models/cellar");
+const Cell = require("../models/cell");
 
 module.exports = function(app){
     const express = require("express");
     const router = express.Router();
-    const Wine = require("../models/wine");
-    const Cellar = require("../models/cellar");
-    const Cell = require("../models/cell");
+    
     //const Algorithm = require("./algorithm");
 
     // !!! ROUTE TO / !!!
@@ -243,7 +244,7 @@ module.exports = function(app){
                     res.json(data);
                 })
                 .catch(function(err){
-                    console.log("[WINECELLAR]:: winecellar data ERROR!");
+                    console.log("[WINECELLAR]:: winecellar data ERROR!!!");
                     res.json(err);
                 });
         })
@@ -253,45 +254,139 @@ module.exports = function(app){
             console.log("[WINECELLAR]:: winecellar cell add request received");
             // type 1: put wine into given cellar
             // type 2: move wines
-            var wine = await Wine.findOne({_id: req.body.wineid});
-            console.log(wine);
             // step 1. create cell with provided wine id
             Cell.create({
-                row: req.body.row,
-                col: req.body.col,
+                row: req.body.input_row,
+                col: req.body.input_col,
                 wine_id: req.body.wineid
             })
                 .then(function(cell){
                     // step 2. find cellar with provided cellar id
                     Cellar.findOne({_id: req.body.cellarid})
+                        .populate({
+                            path: 'floor1.cell_ids',
+                            model: Cell,
+                            populate: {
+                                path: 'wine_id',
+                                model: Wine
+                            }
+                        })
+                        .populate({
+                            path: 'floor2.cell_ids',
+                            model: Cell,
+                            populate: {
+                                path: 'wine_id',
+                                model: Wine
+                            }
+                        })
+                        .populate({
+                            path: 'floor3.cell_ids',
+                            model: Cell,
+                            populate: {
+                                path: 'wine_id',
+                                model: Wine
+                            }
+                        })
                         .then(async function(cellar){
-                            // step 3. push cell id to cellar
-                            // 1->RED 2->White 3->Sparkling 4->Rose, Fortified
-                            console.log(req.body);
-                            if(req.body.row == 1){
-                                cellar.floor1.cell_ids.push(cell._id);
-                            }
-                            else if(req.body.row == 2){
-                                cellar.floor2.cell_ids.push(cell._id);
+                            console.log("cellar found");
+                            // move wines
+                            req.body.move_wine.forEach(async function(wine){
+                                // first, remove wine from cellar
+                                var wine_id;
+                                // floor 1,
                                 
-                            }
-                            else if(req.body.row == 3){
-                                cellar.floor3.cell_ids.push(cell._id);
-                            }
+                                if(wine.cur_row == 1){
+                                    // find cell
+                                    cellar.floor1.cell_ids.forEach(function(cell){
+                                        if(cell.row == wine.cur_row && cell.col == wine.cur_col){
+                                            cellar.floor1.cell_ids.pull(cell._id);
+                                            wine_id = cell.wine_id;
+                                        }
+                                    });
+                                }
+                                // floor 2
+                                else if(wine.cur_row == 2){
+                                    // find cell
+                                    
+                                    cellar.floor2.cell_ids.forEach(function(cell){
+                                        console.log(cell);
+                                        if(cell.row == wine.cur_row && cell.col == wine.cur_col){
+                                            cellar.floor2.cell_ids.pull(cell._id);
+                                            wine_id = cell.wine_id;
+                                        }
+                                    });
+                                }
+                                // floor 3
+                                else if(wine.cur_row == 3){
+                                    // find cell
+                                    cellar.floor3.cell_ids.forEach(function(cell){
+                                        if(cell.row == wine.cur_row && cell.col == wine.cur_col){
+                                            cellar.floor3.cell_ids.pull(cell._id);
+                                            wine_id = cell.wine_id;
+                                        }
+                                    });
+                                }
+                                
+                                console.log("wine pulled");
+                                await Cell.create({
+                                    row: wine.next_row,
+                                    col: wine.next_col,
+                                    wine_id: wine_id
+                                })
+                                    .then(async function(cell1){
+                                        console.log("cell created");
+                                        console.log(cell1);
+                                        if(wine.next_row == 1){
+                                            console.log("fdfdfdfdfdf");
+                                            console.log(wine);
+                                            cellar.floor1.cell_ids.push(cell1._id);
+                                        }
+                                        // floor 2
+                                        else if(wine.next_row == 2){
+                                            cellar.floor2.cell_ids.push(cell1._id);
+                                        }
+                                        // floor 3
+                                        else if(wine.next_row == 3){
+                                            cellar.floor3.cell_ids.push(cell1._id);
+                                        }
 
-                            // save setting
-                            cellar.floor1.type = req.body.floor1.type;
-                            cellar.floor1.temperature_target = req.body.floor1.temp_target;
-                            cellar.floor1.is_smart_mode = req.body.floor1.is_smart_mode;
-                            cellar.floor2.type = req.body.floor2.type;
-                            cellar.floor2.temperature_target = req.body.floor2.temp_target;
-                            cellar.floor2.is_smart_mode = req.body.floor2.is_smart_mode;
-                            cellar.floor3.type = req.body.floor3.type;
-                            cellar.floor3.temperature_target = req.body.floor3.temp_target;
-                            cellar.floor3.is_smart_mode = req.body.floor3.is_smart_mode;
-                            
-                            await cellar.save();
-                            res.json(cellar);
+                                        console.log("wine movement finished");
+                                        // step 3. push cell id to cellar
+                                        // 1->RED 2->White 3->Sparkling 4->Rose, Fortified
+                                        
+                                        if(req.body.input_row == 1){
+                                            cellar.floor1.cell_ids.push(cell._id);
+                                        }
+                                        else if(req.body.input_row == 2){
+                                            cellar.floor2.cell_ids.push(cell._id);
+                                            
+                                        }
+                                        else if(req.body.input_row == 3){
+                                            cellar.floor3.cell_ids.push(cell._id);
+                                        }
+                                        console.log("new wine saved");
+                                        // save setting
+                                        cellar.floor1.type = req.body.floor1.type;
+                                        cellar.floor1.temperature_target = req.body.floor1.temp_target;
+                                        cellar.floor1.is_smart_mode = req.body.floor1.is_smart_mode;
+                                        cellar.floor2.type = req.body.floor2.type;
+                                        cellar.floor2.temperature_target = req.body.floor2.temp_target;
+                                        cellar.floor2.is_smart_mode = req.body.floor2.is_smart_mode;
+                                        cellar.floor3.type = req.body.floor3.type;
+                                        cellar.floor3.temperature_target = req.body.floor3.temp_target;
+                                        cellar.floor3.is_smart_mode = req.body.floor3.is_smart_mode;
+
+                                        console.log("setting saved");
+                                        console.log(cellar);
+
+                                        await cellar.save();
+                                        res.json(cellar);
+                                    })
+                                    .catch(function(err){
+                                        console.log("[WINECELLAR]:: winecellar cell add ERROR!!!");
+                                        res.json(err);
+                                    });                
+                            });
                         })
                         .catch(function(err){
                             console.log("[WINECELLAR]:: winecellar data ERROR!");
@@ -478,10 +573,36 @@ module.exports = function(app){
 
 function moveWines(move_wine, cellar){
     Cellar.findOne({_id: cellar})
+        .populate({
+            path: 'floor1.cell_ids',
+            model: Cell,
+            populate: {
+                path: 'wine_id',
+                model: Wine
+            }
+        })
+        .populate({
+            path: 'floor2.cell_ids',
+            model: Cell,
+            populate: {
+                path: 'wine_id',
+                model: Wine
+            }
+        })
+        .populate({
+            path: 'floor3.cell_ids',
+            model: Cell,
+            populate: {
+                path: 'wine_id',
+                model: Wine
+            }
+        })
         .then(function(cellar){
             move_wine.forEach(function(wine){
+                var wine_id;
                 // first, remove wine from cellar
                 // floor 1,
+                console.log(wine);
                 if(wine.cur_row == 1){
                     // find cell
                     cellar.floor1.cell_ids.forEach(function(cell){
@@ -511,19 +632,42 @@ function moveWines(move_wine, cellar){
                         }
                     });
                 }
+
+                // second, add wine to cellar
+                // floor 1
+                if(wine.next_row == 1){
+                    cellar.floor1.cell_ids.push({
+                        row: wine.next_row,
+                        col: wine.next_col,
+                        wine_id: wine_id
+                    });
+                }
+                // floor 2
+                else if(wine.next_row == 2){
+                    cellar.floor2.cell_ids.push({
+                        row: wine.next_row,
+                        col: wine.next_col,
+                        wine_id: wine_id
+                    });
+                }
+                // floor 3
+                else if(wine.next_row == 3){
+                    cellar.floor3.cell_ids.push({
+                        row: wine.next_row,
+                        col: wine.next_col,
+                        wine_id: wine_id
+                    });
+                }
+
+                console.log(cellar);
+                cellar.save();
+
             });
         })
         .catch(function(err){
             console.log("[WINECELLAR]:: winecellar data ERROR!");
-            res.json(err);
+            return(err);
         });
-    var wine_id;
-    
-    Cell.create({
-        row: wine.cur_row,
-        col: wine.cur_col,
-        wine_id: wine_id
-    })
 }
 
 function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json, input_imgsrc, input_wine_name, input_wine_type){
