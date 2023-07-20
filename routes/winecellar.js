@@ -289,6 +289,7 @@ module.exports = function(app){
                         })
                         .then(async function(cellar){
                             console.log("cellar found");
+                            console.log(req.body);
                             // move wines
                             await req.body.move_wine.forEach(async function(wine){
                                 // first, remove wine from cellar
@@ -571,6 +572,77 @@ module.exports = function(app){
                 });
         })
             
+
+        // !!! ROUTE TO reserve !!!
+        router.route('/reserve')
+        // !!! POST !!!
+            .post(function(req, res){
+                // step 1. find cellar
+                Cellar.findOne({user_id: req.body.user_id})
+                    .populate({
+                        path: 'floor1.cell_ids',
+                        model: Cell,
+                        populate: {
+                            path: 'wine_id',
+                            model: Wine
+                        }
+                    })
+                    .populate({
+                        path: 'floor2.cell_ids',
+                        model: Cell,
+                        populate: {
+                            path: 'wine_id',
+                            model: Wine
+                        }
+                    })
+                    .populate({
+                        path: 'floor3.cell_ids',
+                        model: Cell,
+                        populate: {
+                            path: 'wine_id',
+                            model: Wine
+                        }
+                    })
+                    .then(function(cellar){
+
+                        if(req.body.row == 1){
+                            cellar.floor1.cell_ids.forEach(function(cell){
+                                if(cell.row == req.body.row && cell.col == req.body.col){
+                                    cellar.floor1.temperature_target = cell.wine_id.temp;
+                                }
+                            });
+                            //
+                            var diff = Math.abs(cellar.floor1.temperature_target - cellar.floor1.temperature_now); 
+                            var percel = cellar.floor1.cell_ids.length * 2 + 10;
+
+
+                        }
+                        else if(req.body.row == 2){
+                            cellar.floor2.cell_ids.forEach(function(cell){
+                                if(cell.row == req.body.row && cell.col == req.body.col){
+                                    cellar.floor2.temperature_target = cell.wine_id.temp;
+                                }
+                            });
+
+                            var diff = Math.abs(cellar.floor2.temperature_target - cellar.floor2.temperature_now);
+                            var percel = cellar.floor2.cell_ids.length * 2 + 10;
+                        }
+                        else if(req.body.row == 3){
+                            cellar.floor3.cell_ids.forEach(function(cell){
+                                if(cell.row == req.body.row && cell.col == req.body.col){
+                                    cellar.floor3.temperature_target = cell.wine_id.temp;
+                                }
+                            });
+                            
+                            var diff = Math.abs(cellar.floor3.temperature_target - cellar.floor3.temperature_now);
+                            var percel = cellar.floor3.cell_ids.length * 2 + 10;
+                        }
+                    }
+                )
+            })
+
+
+
     return router;
 }
 
