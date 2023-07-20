@@ -238,7 +238,7 @@ module.exports = function(app){
                     if(wine.type == "Red"){wine_type = 1;}else if(wine.type == "White"){wine_type = 2;}else if(wine.type == "Sparkling"){wine_type = 3;}else{wine_type = 4;}
                     
                     console.log("[WINECELLAR]:: winecellar data returned");
-                    var data = wineAlgorithm(wine.temp, wine_type, cellar, wine.imgsrc, wine.eng_name);
+                    var data = wineAlgorithm(wine.temp, wine_type, cellar, wine.imgsrc, wine.eng_name, wine.type);
                     console.log(data);
                     res.json(data);
                 })
@@ -476,7 +476,57 @@ module.exports = function(app){
     return router;
 }
 
-function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json, input_imgsrc, input_wine_name){
+function moveWines(move_wine, cellar){
+    Cellar.findOne({_id: cellar})
+        .then(function(cellar){
+            move_wine.forEach(function(wine){
+                // first, remove wine from cellar
+                // floor 1,
+                if(wine.cur_row == 1){
+                    // find cell
+                    cellar.floor1.cell_ids.forEach(function(cell){
+                        if(cell.row == wine.cur_row && cell.col == wine.cur_col){
+                            cellar.floor1.cell_ids.pull(cell._id);
+                            wine_id = cell.wine_id;
+                        }
+                    });
+                }
+                // floor 2
+                else if(wine.cur_row == 2){
+                    // find cell
+                    cellar.floor2.cell_ids.forEach(function(cell){
+                        if(cell.row == wine.cur_row && cell.col == wine.cur_col){
+                            cellar.floor2.cell_ids.pull(cell._id);
+                            wine_id = cell.wine_id;
+                        }
+                    });
+                }
+                // floor 3
+                else if(wine.cur_row == 3){
+                    // find cell
+                    cellar.floor3.cell_ids.forEach(function(cell){
+                        if(cell.row == wine.cur_row && cell.col == wine.cur_col){
+                            cellar.floor3.cell_ids.pull(cell._id);
+                            wine_id = cell.wine_id;
+                        }
+                    });
+                }
+            });
+        })
+        .catch(function(err){
+            console.log("[WINECELLAR]:: winecellar data ERROR!");
+            res.json(err);
+        });
+    var wine_id;
+    
+    Cell.create({
+        row: wine.cur_row,
+        col: wine.cur_col,
+        wine_id: wine_id
+    })
+}
+
+function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json, input_imgsrc, input_wine_name, input_wine_type){
     var jsonData = {
         "flag": 1,
         "msg": [
@@ -485,6 +535,7 @@ function wineAlgorithm(input_wine_temp, input_wine_category, cellar_json, input_
         "input_col": 1,
         "input_name": "default",
         "imgsrc": "http://www.winecellar.com.tw/images/2017/2017-12-12/20171212100001.jpg",
+        "input_wine_type" : input_wine_type,
         "floor1": {
             "type": 1,
             "temp_target": 10,
