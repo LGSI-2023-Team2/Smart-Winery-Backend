@@ -169,6 +169,9 @@ module.exports = function(app){
                                             cell_temp_sum[0] += cell.wine_id.temp;
                                         });
                                         if(cellar.floor1.cell_ids.length != 0){
+                                            console.log(cell_temp_sum[0]);
+                                            console.log(cellar.floor1.cell_ids.lenght);
+                                            console.log(cellar.floor1.temperature_target);
                                             cellar.floor1.temperature_target = Math.abs(cell_temp_sum[0] / cellar.floor1.cell_ids.lenght)
                                         }
                                     }
