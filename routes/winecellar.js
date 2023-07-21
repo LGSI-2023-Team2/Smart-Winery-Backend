@@ -236,7 +236,9 @@ module.exports = function(app){
                     var wine = await Wine.findOne({_id: req.query.wineid})
                     .catch(function(err){
                         console.log("[WINECELLAR]:: wine cannot found");
-                        data.flag = 4;
+                        var data = {
+                            "flag" : 4
+                        };
                         res.json(data);
                     });
                     // step 3. check through algorithm
