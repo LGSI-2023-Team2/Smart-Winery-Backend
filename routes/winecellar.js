@@ -686,7 +686,7 @@ module.exports = function(app){
         // !!! POST !!!
             .post(function(req, res){
                 // step 1. find cellar
-                Cellar.findOne({user_id: req.body.user_id})
+                Cellar.findOne({user_id: req.body.cellar_id})
                     .populate({
                         path: 'floor1.cell_ids',
                         model: Cell,
