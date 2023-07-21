@@ -189,6 +189,7 @@ module.exports = function(app){
                                         }
                                     }
                                 }
+                                cellar.is_reserved = false;
                             }
                         }
                     }
