@@ -65,6 +65,8 @@ module.exports = function(app){
                     // step 2. find wine
                     // step 2-1. find cell
                     var cellId;
+                    var cell_temp_sum = [0, 0, 0];
+
                     if(req.body.row == 1){
                         cellar.floor1.cell_ids.forEach(function(cell){
                             if(cell.row == req.body.row && cell.col == req.body.col){
@@ -89,6 +91,108 @@ module.exports = function(app){
                             }
                         });
                     }
+
+                    if(cellar.is_reserved == false){
+                        if(req.body.row == 1){
+                            if(cellar.floor1.is_smart_mode == true){
+                                cellar.floor1.cell_ids.forEach(function(cell){
+                                    cell_temp_sum[0] += cell.wine_id.temp;
+                                });
+                                if(cellar.floor1.cell_ids.length != 0){
+                                    cellar.floor1.temperature_target = Math.abs(cell_temp_sum[0] / cellar.floor1.cell_ids.lenght)
+                                }
+                            }
+                        }
+                        else if(req.body.row == 2){
+                            if(cellar.floor2.is_smart_mode == true){
+                                cellar.floor2.cell_ids.forEach(function(cell){
+                                    cell_temp_sum[1] += cell.wine_id.temp;
+                                });
+                                if(cellar.floor2.cell_ids.length != 0){
+                                    cellar.floor2.temperature_target = Math.abs(cell_temp_sum[1] / cellar.floor2.cell_ids.lenght)
+                                }
+                            }
+                        }
+                        else if(req.body.row == 1){
+                            if(cellar.floor3.is_smart_mode == true){
+                                cellar.floor3.cell_ids.forEach(function(cell){
+                                    cell_temp_sum[2] += cell.wine_id.temp;
+                                });
+                                if(cellar.floor3.cell_ids.length != 0){
+                                    cellar.floor3.temperature_target = Math.abs(cell_temp_sum[2] / cellar.floor3.cell_ids.lenght)
+                                }
+                            }
+                        }
+                    }
+                    else{
+                        if(req.body.row != cellar.reserved_row){
+                            if(req.body.row == 1){
+                                if(cellar.floor1.is_smart_mode == true){
+                                    cellar.floor1.cell_ids.forEach(function(cell){
+                                        cell_temp_sum[0] += cell.wine_id.temp;
+                                    });
+                                    if(cellar.floor1.cell_ids.length != 0){
+                                        cellar.floor1.temperature_target = Math.abs(cell_temp_sum[0] / cellar.floor1.cell_ids.lenght)
+                                    }
+                                }
+                            }
+                            else if(req.body.row == 2){
+                                if(cellar.floor2.is_smart_mode == true){
+                                    cellar.floor2.cell_ids.forEach(function(cell){
+                                        cell_temp_sum[1] += cell.wine_id.temp;
+                                    });
+                                    if(cellar.floor2.cell_ids.length != 0){
+                                        cellar.floor2.temperature_target = Math.abs(cell_temp_sum[1] / cellar.floor2.cell_ids.lenght)
+                                    }
+                                }
+                            }
+                            else if(req.body.row == 1){
+                                if(cellar.floor3.is_smart_mode == true){
+                                    cellar.floor3.cell_ids.forEach(function(cell){
+                                        cell_temp_sum[2] += cell.wine_id.temp;
+                                    });
+                                    if(cellar.floor3.cell_ids.length != 0){
+                                        cellar.floor3.temperature_target = Math.abs(cell_temp_sum[2] / cellar.floor3.cell_ids.lenght)
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                            if(cellar.reserved_col == req.body.col){
+                                if(req.body.row == 1){
+                                    if(cellar.floor1.is_smart_mode == true){
+                                        cellar.floor1.cell_ids.forEach(function(cell){
+                                            cell_temp_sum[0] += cell.wine_id.temp;
+                                        });
+                                        if(cellar.floor1.cell_ids.length != 0){
+                                            cellar.floor1.temperature_target = Math.abs(cell_temp_sum[0] / cellar.floor1.cell_ids.lenght)
+                                        }
+                                    }
+                                }
+                                else if(req.body.row == 2){
+                                    if(cellar.floor2.is_smart_mode == true){
+                                        cellar.floor2.cell_ids.forEach(function(cell){
+                                            cell_temp_sum[1] += cell.wine_id.temp;
+                                        });
+                                        if(cellar.floor2.cell_ids.length != 0){
+                                            cellar.floor2.temperature_target = Math.abs(cell_temp_sum[1] / cellar.floor2.cell_ids.lenght)
+                                        }
+                                    }
+                                }
+                                else if(req.body.row == 1){
+                                    if(cellar.floor3.is_smart_mode == true){
+                                        cellar.floor3.cell_ids.forEach(function(cell){
+                                            cell_temp_sum[2] += cell.wine_id.temp;
+                                        });
+                                        if(cellar.floor3.cell_ids.length != 0){
+                                            cellar.floor3.temperature_target = Math.abs(cell_temp_sum[2] / cellar.floor3.cell_ids.lenght)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                        
                     cellar.save();
                     // step 2-2. remove wine from cell
                     Cell.deleteOne({_id: cellId})
@@ -371,9 +475,7 @@ module.exports = function(app){
                                 cellar.floor1.cell_ids.push(cell._id);
                             }
                             else if(req.body.input_row == 2){
-                                console.log("Tlqkf");
                                 cellar.floor2.cell_ids.push(cell._id);
-                                console.log("tlqkf2");
                             }
                             else if(req.body.input_row == 3){
                                 cellar.floor3.cell_ids.push(cell._id);
@@ -616,10 +718,16 @@ module.exports = function(app){
                                     cellar.floor1.temperature_target = cell.wine_id.temp;
                                 }
                             });
-                            //
                             var diff = Math.abs(cellar.floor1.temperature_target - cellar.floor1.temperature_now); 
-                            var percel = cellar.floor1.cell_ids.length * 2 + 10;
-
+                            var percel = (cellar.floor1.cell_ids.length * 2 + 10) * diff;
+                            cellar.is_reserved = true;
+                            cellar.reserved_row = 1;
+                            cellar.reserved_col = req.body.col;
+                            var data = {
+                                "estimate_time": percel,
+                                "target_temp" : cellar.floor1.temperature_target
+                            };
+                            res.json(data);
 
                         }
                         else if(req.body.row == 2){
@@ -631,6 +739,14 @@ module.exports = function(app){
 
                             var diff = Math.abs(cellar.floor2.temperature_target - cellar.floor2.temperature_now);
                             var percel = cellar.floor2.cell_ids.length * 2 + 10;
+                            cellar.is_reserved = true;
+                            cellar.reserved_row = 2;
+                            cellar.reserved_col = req.body.col;
+                            var data = {
+                                "estimate_time": percel,
+                                "target_temp" : cellar.floor2.temperature_target
+                            };
+                            res.json(data);
                         }
                         else if(req.body.row == 3){
                             cellar.floor3.cell_ids.forEach(function(cell){
@@ -641,7 +757,17 @@ module.exports = function(app){
                             
                             var diff = Math.abs(cellar.floor3.temperature_target - cellar.floor3.temperature_now);
                             var percel = cellar.floor3.cell_ids.length * 2 + 10;
+                            cellar.is_reserved = true;
+                            cellar.reserved_row = 3;
+                            cellar.reserved_col = req.body.col;
+                            var data = {
+                                "estimate_time": percel,
+                                "target_temp" : cellar.floor3.temperature_target
+                            };
+                            res.json(data);
                         }
+
+                        cellar.save();
                     }
                 )
             })

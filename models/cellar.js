@@ -36,6 +36,18 @@ const cellarSchema = new mongoose.Schema({
   floor3:{
     type: floorSchema,
     required: true
+  },
+  is_reserved: {
+    type: Boolean,
+    default: false
+  },
+  reserved_row: {
+    type: Number,
+    default: 0
+  },
+  reserved_col: {
+    type: Number,
+    default: 0
   }
 });
 
