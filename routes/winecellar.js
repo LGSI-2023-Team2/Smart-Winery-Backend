@@ -233,15 +233,7 @@ module.exports = function(app){
                 .then(async function(cellar){
                     // step 2. find cell
                     console.log("[WINECELLAR]:: winecellar found");
-                    var wine = await Wine.findOne({_id: req.query.wineid})
-                    .catch(function(err){
-                        console.log("[WINECELLAR]:: wine cannot found");
-                        var data = {
-                            "flag" : 4
-                        };
-                        res.json(data);
-                        exit(0);
-                    });
+                    var wine = await Wine.findOne({_id: req.query.wineid});
                     // step 3. check through algorithm
                     var wine_type;
                     if(wine.type == "Red"){wine_type = 1;}else if(wine.type == "White"){wine_type = 2;}else if(wine.type == "Sparkling"){wine_type = 3;}else{wine_type = 4;}
@@ -252,8 +244,12 @@ module.exports = function(app){
                     res.json(data);
                 })
                 .catch(function(err){
-                    console.log("[WINECELLAR]:: winecellar data ERROR!!!");
-                    res.json(err);
+                    console.log("[WINECELLAR]:: wine cannot found");
+                    var data = {
+                        "flag" : 4
+                    };
+                    res.json(data);
+                    exit(0);
                 });
         })
         // !!! POST !!!
