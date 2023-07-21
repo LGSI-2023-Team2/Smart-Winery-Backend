@@ -686,7 +686,7 @@ module.exports = function(app){
         // !!! POST !!!
             .post(function(req, res){
                 // step 1. find cellar
-                Cellar.findOne({user_id: req.body.cellar_id})
+                Cellar.findOne({_id: req.body.cellar_id})
                     .populate({
                         path: 'floor1.cell_ids',
                         model: Cell,
@@ -712,7 +712,6 @@ module.exports = function(app){
                         }
                     })
                     .then(function(cellar){
-
                         if(req.body.row == 1){
                             cellar.floor1.cell_ids.forEach(function(cell){
                                 if(cell.row == req.body.row && cell.col == req.body.col){
