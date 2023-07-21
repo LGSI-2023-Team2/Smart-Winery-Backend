@@ -354,7 +354,7 @@ module.exports = function(app){
                                         console.log("wine movement finished");
                                         // step 3. push cell id to cellar
                                         // 1->RED 2->White 3->Sparkling 4->Rose, Fortified
-                                        
+                                        await cellar.save();
                                     })
                                     .catch(function(err){
                                         console.log("[WINECELLAR]:: winecellar cell add ERROR!!!");
