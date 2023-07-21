@@ -294,7 +294,8 @@ module.exports = function(app){
                             console.log("cellar found");
                             console.log(req.body);
                             // move wines
-                            await req.body.move_wine.forEach(async function(wine){
+
+                            for (const wine of req.body.move_wine){
                                 // first, remove wine from cellar
                                 var wine_id;
                                 // floor 1,
@@ -357,13 +358,12 @@ module.exports = function(app){
                                         console.log("wine movement finished");
                                         // step 3. push cell id to cellar
                                         // 1->RED 2->White 3->Sparkling 4->Rose, Fortified
-                                        await cellar.save();
                                     })
                                     .catch(function(err){
                                         console.log("[WINECELLAR]:: winecellar cell add ERROR!!!");
                                         res.json(err);
                                     });                
-                            });
+                            }
 
                             console.log("let's save new wine");
                             console.log(cellar);
