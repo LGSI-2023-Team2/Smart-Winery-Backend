@@ -249,7 +249,6 @@ module.exports = function(app){
                         "flag" : 4
                     };
                     res.json(data);
-                    exit(0);
                 });
         })
         // !!! POST !!!
