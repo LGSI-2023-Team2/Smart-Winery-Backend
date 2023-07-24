@@ -317,7 +317,7 @@ module.exports = function(app){
                     console.log(cellar);
                     cellar.floor1.type = setting.floor1_type;
                     cellar.floor1.is_smart_mode = setting.floor1_is_smart_mode;
-                    if(cellar.floor1.is_smart_mode == true){
+                    if(cellar.floor1.is_smart_mode == true && cellar.floor1.cell_ids.length != 0 && cellar.reserved_row != 1){
                         var temp = 0;
                         for(var i = 0; i < cellar.floor1.cell_ids.length; i++){
                             temp += cellar.floor1.cell_ids[i].wine_id.temp;
@@ -330,7 +330,7 @@ module.exports = function(app){
                     }
                     cellar.floor2.type = setting.floor2_type;
                     cellar.floor2.is_smart_mode = setting.floor2_is_smart_mode;
-                    if(cellar.floor2.is_smart_mode == true){
+                    if(cellar.floor2.is_smart_mode == true && cellar.floor2.cell_ids.length != 0 && cellar.reserved_row != 2){
                         var temp = 0;
                         for(var i = 0; i < cellar.floor2.cell_ids.length; i++){
                             temp += cellar.floor2.cell_ids[i].wine_id.temp;
@@ -343,7 +343,7 @@ module.exports = function(app){
                     }
                     cellar.floor3.type = setting.floor3_type;
                     cellar.floor3.is_smart_mode = setting.floor3_is_smart_mode;
-                    if(cellar.floor3.is_smart_mode == true){
+                    if(cellar.floor3.is_smart_mode == true && cellar.floor3.cell_ids.length != 0 && cellar.reserved_row != 3){
                         var temp = 0;
                         for(var i = 0; i < cellar.floor3.cell_ids.length; i++){
                             temp += cellar.floor3.cell_ids[i].wine_id.temp;
