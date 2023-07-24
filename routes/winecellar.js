@@ -287,19 +287,73 @@ module.exports = function(app){
             var setting = req.body;
             // step 1. find cellar
             Cellar.findOne({_id: req.body.cellarid})
+                .populate({
+                    path: 'floor1.cell_ids',
+                    model: Cell,
+                    populate: {
+                        path: 'wine_id',
+                        model: Wine
+                    }
+                })
+                .populate({
+                    path: 'floor2.cell_ids',
+                    model: Cell,
+                    populate: {
+                        path: 'wine_id',
+                        model: Wine
+                    }
+                })
+                .populate({
+                    path: 'floor3.cell_ids',
+                    model: Cell,
+                    populate: {
+                        path: 'wine_id',
+                        model: Wine
+                    }
+                })
                 .then(function(cellar){
                     // step 2. update cellar setting
                     console.log("[WINECELLAR]:: winecellar found");
                     console.log(cellar);
                     cellar.floor1.type = setting.floor1_type;
-                    cellar.floor1.temperature_target = setting.floor1_temperature_target;
                     cellar.floor1.is_smart_mode = setting.floor1_is_smart_mode;
+                    if(cellar.floor1.is_smart_mode == true){
+                        var temp = 0;
+                        for(var i = 0; i < cellar.floor1.cell_ids.length; i++){
+                            temp += cellar.floor1.cell_ids[i].wine_id.temp;
+                        }
+                        temp = temp / cellar.floor1.cell_ids.length;
+                        cellar.floor1.temperature_target = temp;
+                    }
+                    else{
+                        cellar.floor1.temperature_target = setting.floor1_temperature_target;
+                    }
                     cellar.floor2.type = setting.floor2_type;
-                    cellar.floor2.temperature_target = setting.floor2_temperature_target;
                     cellar.floor2.is_smart_mode = setting.floor2_is_smart_mode;
+                    if(cellar.floor2.is_smart_mode == true){
+                        var temp = 0;
+                        for(var i = 0; i < cellar.floor2.cell_ids.length; i++){
+                            temp += cellar.floor2.cell_ids[i].wine_id.temp;
+                        }
+                        temp = temp / cellar.floor2.cell_ids.length;
+                        cellar.floor2.temperature_target = temp;
+                    }
+                    else{
+                        cellar.floor2.temperature_target = setting.floor2_temperature_target;
+                    }
                     cellar.floor3.type = setting.floor3_type;
-                    cellar.floor3.temperature_target = setting.floor3_temperature_target;
                     cellar.floor3.is_smart_mode = setting.floor3_is_smart_mode;
+                    if(cellar.floor3.is_smart_mode == true){
+                        var temp = 0;
+                        for(var i = 0; i < cellar.floor3.cell_ids.length; i++){
+                            temp += cellar.floor3.cell_ids[i].wine_id.temp;
+                        }
+                        temp = temp / cellar.floor3.cell_ids.length;
+                        cellar.floor3.temperature_target = temp;
+                    }
+                    else{
+                        cellar.floor3.temperature_target = setting.floor3_temperature_target;
+                    }
                     // step 3. return cellar setting info
                     cellar.save();
                     res.json(cellar);
