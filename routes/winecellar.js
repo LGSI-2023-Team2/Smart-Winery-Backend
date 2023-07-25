@@ -113,7 +113,7 @@ module.exports = function(app){
                                 }
                             }
                         }
-                        else if(req.body.row == 1){
+                        else if(req.body.row == 3){
                             if(cellar.floor3.is_smart_mode == true){
                                 cellar.floor3.cell_ids.forEach(function(cell){
                                     cell_temp_sum[2] += cell.wine_id.temp;
@@ -150,7 +150,7 @@ module.exports = function(app){
                                     }
                                 }
                             }
-                            else if(req.body.row == 1){
+                            else if(req.body.row == 3){
                                 if(cellar.floor3.is_smart_mode == true){
                                     cellar.floor3.cell_ids.forEach(function(cell){
                                         cell_temp_sum[2] += cell.wine_id.temp;
@@ -186,7 +186,7 @@ module.exports = function(app){
                                         }
                                     }
                                 }
-                                else if(req.body.row == 1){
+                                else if(req.body.row == 3){
                                     if(cellar.floor3.is_smart_mode == true){
                                         cellar.floor3.cell_ids.forEach(function(cell){
                                             cell_temp_sum[2] += cell.wine_id.temp;
