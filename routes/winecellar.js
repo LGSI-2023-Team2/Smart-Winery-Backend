@@ -966,7 +966,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
     //모든 칸이 차있는 경우
     if(empty_check == 0){
         jsonData.flag = 0;
-        jsonData.msg("Wine cellar is already full!");
+        jsonData.msg.push("Wine cellar is already full!");
         return jsonData;
     }
 
@@ -1304,20 +1304,20 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                         }
                         else{
                             jsonData.flag = 0;
-                            jsonData.msg("Wine can not add!12");
+                            jsonData.msg.push("Wine can not add!12");
                             return jsonData;
                         }
                     }
                     else{
                         jsonData.flag = 0;
-                        jsonData.msg("Wine can not add!13")
+                        jsonData.msg.push("Wine can not add!13")
                         return jsonData;
                     }
                 }
                 else if((is_smart_arr[not_this_cate[0]] == 0) && (is_smart_arr[not_this_cate[1]] == 1)){
                     if(cur_cellar_count[not_this_cate[0]] == 5){
                         jsonData.flag = 0;
-                        jsonData.msg("Wine can not add!14")
+                        jsonData.msg.push("Wine can not add!14")
                         return jsonData;
                     }
                     else{
@@ -1335,7 +1335,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                 else if((is_smart_arr[not_this_cate[0]] == 1) && (is_smart_arr[not_this_cate[1]] == 0)){
                     if(cur_cellar_count[not_this_cate[1]] == 5){
                         jsonData.flag = 0;
-                        jsonData.msg("Wine can not add!15")
+                        jsonData.msg.push("Wine can not add!15")
                         return jsonData;
                     }
                     else{
@@ -1355,7 +1355,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                     if(cur_cellar_count[not_this_cate[0]] == 5){
                         if(cur_cellar_count[not_this_cate[1]] == 5){
                             jsonData.flag = 0;
-                            jsonData.msg("Wine can not add!16")
+                            jsonData.msg.push("Wine can not add!16")
                             return jsonData;
                         }
                         else{
@@ -1373,7 +1373,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                     }
                     else if(cur_cellar_count[not_this_cate[1]] == 5){
                         jsonData.flag = 0;
-                        jsonData.msg("Wine can not add!17")
+                        jsonData.msg.push("Wine can not add!17")
                         return jsonData;
                     }
                     else{
@@ -1763,7 +1763,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
             if(blank_and_user.length == 0){
                 console.log(12345);
                 jsonData.flag = 0;
-                jsonData.msg("Wine can not add!20")
+                jsonData.msg.push("Wine can not add!20")
                 return jsonData;
             }
 
@@ -1804,12 +1804,12 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
             }
 
             jsonData.flag = 0;
-            jsonData.msg("Wine can not add!20")
+            jsonData.msg.push("Wine can not add!20")
             return jsonData;
         }
     }
 
     jsonData.flag = 0;
-    jsonData.msg("Wine can not add!15 end")
+    jsonData.msg.push("Wine can not add!15 end")
     return jsonData;
 }
