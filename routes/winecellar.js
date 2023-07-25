@@ -1507,7 +1507,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                             for(var k = 0; k < 5; k++){
                                 if((wine_cellar[min_floor * 5 + k] != -1) && (wine_cellar[red_floor[i] * 5 + j] == -1)){
                                     wine_cellar[red_floor[i] * 5 + j] = wine_cellar[min_floor * 5 + k];
-                                    wine_cellar[min_floor * 5 + k] == -1;
+                                    wine_cellar[min_floor * 5 + k] = -1;
                                     red_count_arr[min_floor]--;
                                     jsonData.move_wine.push({
                                         "cur_row" : min_floor + 1,
@@ -1591,7 +1591,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                             for(var k = 0; k < 5; k++){
                                 if((wine_cellar[min_floor * 5 + k] != -1) && (wine_cellar[white_floor[i] * 5 + j] == -1)){
                                     wine_cellar[white_floor[i] * 5 + j] = wine_cellar[min_floor * 5 + k];
-                                    wine_cellar[min_floor * 5 + k] == -1;
+                                    wine_cellar[min_floor * 5 + k] = -1;
                                     white_count_arr[min_floor]--;
                                     jsonData.move_wine.push({
                                         "cur_row" : min_floor + 1,
@@ -1676,7 +1676,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                             for(var k = 0; k < 5; k++){
                                 if((wine_cellar[min_floor * 5 + k] != -1) && (wine_cellar[spark_floor[i] * 5 + j] == -1)){
                                     wine_cellar[spark_floor[i] * 5 + j] = wine_cellar[min_floor * 5 + k];
-                                    wine_cellar[min_floor * 5 + k] == -1;
+                                    wine_cellar[min_floor * 5 + k] = -1;
                                     spark_count_arr[min_floor]--;
                                     jsonData.move_wine.push({
                                         "cur_row" : min_floor + 1,
