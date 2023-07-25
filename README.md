@@ -29,7 +29,7 @@
 		  <td align="center"><img src="https://avatars.githubusercontent.com/u/86334960?v=4"width="100px;" alt=""/></td>
 	 </tr>
 	 <tr/>
-		 <td align="center"><a href="https://github.com/countryCat1202"><b>Front-end : Doheon Jeong</b></a></td>
+		 <td align="center"><a href="https://github.com/countryCat1202"><b>Front-end : Dohyeon Jeong</b></a></td>
 		 <td align="center"><a href="https://github.com/seohyun060"><b>Front-end : Seohyun Park</b></a></td>
 		 <td align="center"><a href="https://github.com/IwonskiI"><b>Front-end : Wonseok Han</b></a></td>
 	 </tr>
