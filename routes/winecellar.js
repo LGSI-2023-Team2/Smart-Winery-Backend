@@ -1747,6 +1747,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
         else{//몰아줄 놈이 없고, 빈 칸도 없음 -> 즉 user mode없으면 안됨
 
             var blank_and_user = [];
+            console.log(1234);
 
             for(var i = 0; i < 3; i++){
                 if(is_smart_arr[i] == 0){
@@ -1760,6 +1761,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
             }
 
             if(blank_and_user.length == 0){
+                console.log(12345);
                 jsonData.flag = 0;
                 jsonData.msg("Wine can not add!20")
                 return jsonData;
