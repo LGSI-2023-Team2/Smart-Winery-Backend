@@ -99,7 +99,7 @@ module.exports = function(app){
                                     cell_temp_sum[0] += cell.wine_id.temp;
                                 });
                                 if(cellar.floor1.cell_ids.length != 0){
-                                    cellar.floor1.temperature_target = Math.abs(cell_temp_sum[0] / cellar.floor1.cell_ids.length)
+                                    cellar.floor1.temperature_target = Math.round(cell_temp_sum[0] / cellar.floor1.cell_ids.length)
                                 }
                             }
                         }
@@ -109,7 +109,7 @@ module.exports = function(app){
                                     cell_temp_sum[1] += cell.wine_id.temp;
                                 });
                                 if(cellar.floor2.cell_ids.length != 0){
-                                    cellar.floor2.temperature_target = Math.abs(cell_temp_sum[1] / cellar.floor2.cell_ids.length)
+                                    cellar.floor2.temperature_target = Math.round(cell_temp_sum[1] / cellar.floor2.cell_ids.length)
                                 }
                             }
                         }
@@ -119,7 +119,7 @@ module.exports = function(app){
                                     cell_temp_sum[2] += cell.wine_id.temp;
                                 });
                                 if(cellar.floor3.cell_ids.length != 0){
-                                    cellar.floor3.temperature_target = Math.abs(cell_temp_sum[2] / cellar.floor3.cell_ids.length)
+                                    cellar.floor3.temperature_target = Math.round(cell_temp_sum[2] / cellar.floor3.cell_ids.length)
                                 }
                             }
                         }
@@ -132,7 +132,7 @@ module.exports = function(app){
                                         cell_temp_sum[0] += cell.wine_id.temp;
                                     });
                                     if(cellar.floor1.cell_ids.length != 0){
-                                        cellar.floor1.temperature_target = Math.abs(cell_temp_sum[0] / cellar.floor1.cell_ids.length)
+                                        cellar.floor1.temperature_target = Math.round(cell_temp_sum[0] / cellar.floor1.cell_ids.length)
                                     }
                                 }
                             }
@@ -145,8 +145,8 @@ module.exports = function(app){
                                         console.log(cellar.floor2.temperature_target);
                                         console.log(cell_temp_sum[1]);
                                         console.log(cellar.floor2.cell_ids.length);
-                                        console.log(Math.abs(cell_temp_sum[1] / cellar.floor2.cell_ids.length));
-                                        cellar.floor2.temperature_target = Math.abs(cell_temp_sum[1] / cellar.floor2.cell_ids.length)
+                                        console.log(Math.round(cell_temp_sum[1] / cellar.floor2.cell_ids.length));
+                                        cellar.floor2.temperature_target = Math.round(cell_temp_sum[1] / cellar.floor2.cell_ids.length)
                                     }
                                 }
                             }
@@ -156,7 +156,7 @@ module.exports = function(app){
                                         cell_temp_sum[2] += cell.wine_id.temp;
                                     });
                                     if(cellar.floor3.cell_ids.length != 0){
-                                        cellar.floor3.temperature_target = Math.abs(cell_temp_sum[2] / cellar.floor3.cell_ids.length)
+                                        cellar.floor3.temperature_target = Math.round(cell_temp_sum[2] / cellar.floor3.cell_ids.length)
                                     }
                                 }
                             }
@@ -172,7 +172,7 @@ module.exports = function(app){
                                             console.log(cell_temp_sum[0]);
                                             console.log(cellar.floor1.cell_ids.length);
                                             console.log(cellar.floor1.temperature_target);
-                                            cellar.floor1.temperature_target = Math.abs(cell_temp_sum[0] / cellar.floor1.cell_ids.length)
+                                            cellar.floor1.temperature_target = Math.round(cell_temp_sum[0] / cellar.floor1.cell_ids.length)
                                         }
                                     }
                                 }
@@ -182,7 +182,7 @@ module.exports = function(app){
                                             cell_temp_sum[1] += cell.wine_id.temp;
                                         });
                                         if(cellar.floor2.cell_ids.length != 0){
-                                            cellar.floor2.temperature_target = Math.abs(cell_temp_sum[1] / cellar.floor2.cell_ids.length)
+                                            cellar.floor2.temperature_target = Math.round(cell_temp_sum[1] / cellar.floor2.cell_ids.length)
                                         }
                                     }
                                 }
@@ -192,7 +192,7 @@ module.exports = function(app){
                                             cell_temp_sum[2] += cell.wine_id.temp;
                                         });
                                         if(cellar.floor3.cell_ids.length != 0){
-                                            cellar.floor3.temperature_target = Math.abs(cell_temp_sum[2] / cellar.floor3.cell_ids.length)
+                                            cellar.floor3.temperature_target = Math.round(cell_temp_sum[2] / cellar.floor3.cell_ids.length)
                                         }
                                     }
                                 }
@@ -324,7 +324,7 @@ module.exports = function(app){
                             temp += cellar.floor1.cell_ids[i].wine_id.temp;
                         }
                         temp = temp / cellar.floor1.cell_ids.length;
-                        cellar.floor1.temperature_target = temp;
+                        cellar.floor1.temperature_target = Math.round(temp);
                     }
                     else{
                         cellar.floor1.temperature_target = setting.floor1_temperature_target;
@@ -338,7 +338,7 @@ module.exports = function(app){
                             temp += cellar.floor2.cell_ids[i].wine_id.temp;
                         }
                         temp = temp / cellar.floor2.cell_ids.length;
-                        cellar.floor2.temperature_target = temp;
+                        cellar.floor2.temperature_target = Math.round(temp);
                     }
                     else{
                         cellar.floor2.temperature_target = setting.floor2_temperature_target;
@@ -352,7 +352,7 @@ module.exports = function(app){
                             temp += cellar.floor3.cell_ids[i].wine_id.temp;
                         }
                         temp = temp / cellar.floor3.cell_ids.length;
-                        cellar.floor3.temperature_target = temp;
+                        cellar.floor3.temperature_target = Math.round(temp);
                     }
                     else{
                         cellar.floor3.temperature_target = setting.floor3_temperature_target;
@@ -638,7 +638,7 @@ module.exports = function(app){
                                     }
                                     temp += wine.temp;
                                     temp /= cellar.floor1.cell_ids.length;
-                                    cellar.floor1.temperature_target = temp;
+                                    cellar.floor1.temperature_target = Math.round(temp);
                                 }
                             }
                             else if(req.body.wine2_row == 2){
@@ -650,7 +650,7 @@ module.exports = function(app){
                                     }
                                     temp += wine.temp;
                                     temp = temp / cellar.floor2.cell_ids.length;
-                                    cellar.floor2.temperature_target = temp;
+                                    cellar.floor2.temperature_target = Math.round(temp);
                                 }
                             }
                             else if(req.body.wine2_row == 3){
@@ -662,7 +662,7 @@ module.exports = function(app){
                                     }
                                     temp += wine.temp;
                                     temp = temp / cellar.floor3.cell_ids.length;
-                                    cellar.floor3.temperature_target = temp;
+                                    cellar.floor3.temperature_target = Math.round(temp);
                                 }
                             }
                             else{
@@ -688,7 +688,7 @@ module.exports = function(app){
                                     }
                                     temp += wine.temp;
                                     temp /= cellar.floor1.cell_ids.length;
-                                    cellar.floor1.temperature_target = temp;
+                                    cellar.floor1.temperature_target = Math.round(temp);
                                 }
                             }
                             else if(req.body.wine1_row == 2){
@@ -705,7 +705,7 @@ module.exports = function(app){
                                     }
                                     temp += wine.temp;
                                     temp = temp / cellar.floor2.cell_ids.length;
-                                    cellar.floor2.temperature_target = temp;
+                                    cellar.floor2.temperature_target = Math.round(temp);
                                 }
                             }
                             else if(req.body.wine1_row == 3){
@@ -722,7 +722,7 @@ module.exports = function(app){
                                     }
                                     temp += wine.temp;
                                     temp = temp / cellar.floor3.cell_ids.length;
-                                    cellar.floor3.temperature_target = temp;
+                                    cellar.floor3.temperature_target = Math.round(temp);
                                 }
                             }
                             
@@ -1070,7 +1070,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                     if(cur_cellar_count[i] != 5){ // 그 칸에서 빈 것이 있는 경우
                         for(var j = 0; j < 5; j++){ 
                             if(wine_cellar[i * 5 + j] == -1){
-                                next_temp = Number((cur_cellar_temp[i] * cur_cellar_count[i] + input_wine_temp) / (cur_cellar_count[i] + 1));
+                                next_temp = Math.round((cur_cellar_temp[i] * cur_cellar_count[i] + input_wine_temp) / (cur_cellar_count[i] + 1));
                                 jsonData.input_row = i + 1;
                                 jsonData.input_col = j + 1;
                                 jsonData.msg.push("user mode인 i+1번째 j+1에 와인을 넣음 온도는 그전과 같게 유지");
@@ -1214,7 +1214,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                                     }
                                     console.log("cur_cellar_count[i] : " + cur_cellar_count[i]);
                                     if(cur_cellar_count[i] != 0){
-                                        cur_cellar_temp[i] = Number(cur_cellar_temp[i] / cur_cellar_count[i]);
+                                        cur_cellar_temp[i] = Math.round(cur_cellar_temp[i] / cur_cellar_count[i]);
                                         console.log("cur_cellar_temp[i] : " + cur_cellar_temp[i]);
                                     }
                                 }
@@ -1285,7 +1285,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                                         }
                                     }
                                     if(cur_cellar_count[i] != 0){
-                                        cur_cellar_temp[i] = Number(cur_cellar_temp[i] / cur_cellar_count[i]);
+                                        cur_cellar_temp[i] = Math.round(cur_cellar_temp[i] / cur_cellar_count[i]);
                                     }
                                 }
 
@@ -1537,7 +1537,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                     }
                 }
                 if(cur_cellar_count[i] != 0){
-                    cur_cellar_temp[i] = Number(cur_cellar_temp[i] / cur_cellar_count[i]);
+                    cur_cellar_temp[i] = Math.round(cur_cellar_temp[i] / cur_cellar_count[i]);
                 }
             }
 
@@ -1621,7 +1621,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                     }
                 }
                 if(cur_cellar_count[i] != 0){
-                    cur_cellar_temp[i] = Number(cur_cellar_temp[i] / cur_cellar_count[i]);
+                    cur_cellar_temp[i] = Math.round(cur_cellar_temp[i] / cur_cellar_count[i]);
                 }
             }
 
@@ -1706,7 +1706,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                     }
                 }
                 if(cur_cellar_count[i] != 0){
-                    cur_cellar_temp[i] = Number(cur_cellar_temp[i] / cur_cellar_count[i]);
+                    cur_cellar_temp[i] = Math.round(cur_cellar_temp[i] / cur_cellar_count[i]);
                 }
             }
 
@@ -1776,7 +1776,7 @@ function wineAlgorithm(input_wine_id, input_wine_temp, input_wine_category, cell
                     }
                 }
                 if(cur_cellar_count[i] != 0){
-                    cur_cellar_temp[i] = Number(cur_cellar_temp[i] / cur_cellar_count[i]);
+                    cur_cellar_temp[i] = Math.round(cur_cellar_temp[i] / cur_cellar_count[i]);
                 }
             }
             
